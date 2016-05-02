@@ -1,0 +1,9 @@
+Help for LISTEXTENDCHANS:
+
+LISTEXTENDCHANS shows all accounts with extended
+channel ability enabled.
+
+Syntax: LISTEXTENDCHANS [mask]
+
+Examples:
+    /msg &nick& LISTEXTENDCHANS

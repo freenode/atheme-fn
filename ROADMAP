@@ -1,0 +1,51 @@
+[x] Theia database loader
+[ ] Testing with large amounts of users, channels, etc
+[ ] Missing features
+  [x] message "freenode is a service of ..." on registration
+  [x] umode +e on grouped nicks
+  [x] nickserv/set_unfiltered (not needed)
+  [x] nickserv/extendchans
+  [x] nickserv non-enforce recover/release? (or enforce)
+  [x] nickserv/set_accountname (weakens identity!)
+  [x] nickserv/set_private (should be smarter in what to show still)
+  [x] IP matching for akicks
+  [x] +d matching for /cs unban
+  [x] ban forward tracking and matching for /cs unban
+  [x] a way to deal with channel access lists
+  [ ] last used time on channel access entries? (not so useful with roles)
+  [x] chanserv unban only self? (code allows both, decision pending)
+  [x] a way to allow nonopers to list channels by name pattern? (alis?)
+  [x] chanserv/op|voice on -nick?
+  [x] chanserv/set_private? (should be smarter in what to show still)
+  [ ] chanserv/clear_(ops|voices|modes)? (compare chanserv/recover)
+  [x] operserv/greplog
+  [x] services operator passwords
+[ ] New features
+  [ ] group contact support
+  [ ] group member support
+  [ ] a command that allows helpers to drop nicks "expired" according to
+      the policy
+  [ ] look into accountability of channel ops towards channel ops
+  [ ] *!*@freenode/staff/* entries outside network channels seem more like
+      some sort of flag, not a regular access entry
+
+Things that will (most likely) go away:
+- memoserv/reply
+- chanserv/op|voice on multiple
+- autodeop
+- nick linking will be replaced by nick grouping
+- nonoper nickserv/list
+- nickserv/set_automask
+- nickserv/set_secure
+- nickserv/set_unsecure
+- "contact" instead of "founder" in chanserv
+- getting channel access from nickserv access lists (unless we implement
+  this for sorcerynet)
+- creation time on channel access entries (we have last modified time, and
+  do not reverse the list on every restart)
+- chanserv/set_alternate (automatically determined)
+- channel passwords
+- oper override for nickserv/ghost (use /kill)
+- same-command oper override for most chanserv commands (there are
+  chanserv/fflags and chanserv/ftransfer for example)
+- the privacy-violating DCC interface

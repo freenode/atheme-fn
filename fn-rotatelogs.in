@@ -1,0 +1,40 @@
+#!/usr/bin/perl
+# Atheme log rotate script
+# Note: this script assumes --enable-fhs-paths is not in use.
+# $Id: fn-rotatelogs.in 51 2008-03-03 18:26:18Z jilles $
+
+my @arr = gmtime(time-86399);
+my $yesterday = sprintf('%04u%02u%02u', $arr[5] + 1900, $arr[4] + 1, $arr[3]);
+
+my $basedir = '@prefix@';
+my $count = 0;
+
+foreach my $logfile ('atheme.log', 'account.log', 'commands.log')
+{
+  my $f = $basedir.'/var/'.$logfile;
+  my $f1 = $f.'.'.$yesterday;
+  unless (-f $f) {
+    print "Log file $f does not exist\n";
+    next;
+  }
+  if (-f $f1) {
+    #print "Destination $f1 already exists, not overwriting it\n";
+    next;
+  }
+  rename $f, $f1;
+  open TOUCHLOG, '>>'.$f;
+  close TOUCHLOG;
+  $count++;
+}
+
+#
+# Get the pid filename.  If the file exists, use it to HUP the server.
+#
+
+my $PIDFile = $basedir.'/var/atheme.pid';
+if ($count > 0 && -f $PIDFile)
+{
+  kill 1, `cat $PIDFile`;
+}
+
+exit 0;

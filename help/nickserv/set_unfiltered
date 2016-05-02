@@ -1,0 +1,8 @@
+Help for SET UNFILTERED:
+
+SET UNFILTERED allows you to receive messages from
+unregistered users. These messages are turned off
+by default on freenode at this time because of spambot
+abuse.
+
+Syntax: SET UNFILTERED ON|OFF

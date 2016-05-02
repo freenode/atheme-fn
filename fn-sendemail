@@ -1,0 +1,17 @@
+#!/bin/bash
+
+install=$(readlink -f "$(dirname $0)/..")
+server=$(<${install}/etc/email-host.txt)
+
+#subject="No subject"
+#while read -r field rest; do
+#       case "$field" in
+#               "") break ;;
+#               Subject:) subject="$rest" ;;
+#       esac
+#done
+#case "$subject" in
+#       *"'"*) subject="No subject"
+#esac
+ssh "$server" /usr/sbin/sendmail "$@"
+

@@ -1,0 +1,4 @@
+source=/home/jilles/src/hg/atheme
+prefix=/home/jilles/ircd/atheme
+#LDFLAGS=-L/usr/local/lib
+#CPPFLAGS=-I/usr/local/include

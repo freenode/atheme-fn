@@ -1,0 +1,10 @@
+Help for EXTENDCHANS:
+
+EXTENDCHANS allows operators to set extended channel
+ability on an account. This allows the user to join
+more channels at a time.
+
+Syntax: EXTENDCHANS <nickname> ON|OFF
+
+Examples:
+    /msg &nick& EXTENDCHANS spb ON

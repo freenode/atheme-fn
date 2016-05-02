@@ -1,0 +1,16 @@
+Help for REGAIN:
+
+REGAIN disconnects an old user session, or somebody
+attempting to use your nickname without authorization,
+then changes your nickname to the given nickname.
+This may not work, disconnecting you, if the target
+client reconnects automatically.
+
+If you are logged in to the nick's account, you need
+not specify a password, otherwise you have to. In the
+latter case, you will still have to identify later.
+
+Syntax: REGAIN <nick> [password]
+
+Example:
+    /msg &nick& REGAIN foo bar

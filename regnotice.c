@@ -39,7 +39,7 @@ static void nick_reg_notice(void *vptr)
 
 	myuser_notice(nicksvs.nick, mu, " ");
 	myuser_notice(nicksvs.nick, mu, "For frequently-asked questions about the network, please see the");
-	myuser_notice(nicksvs.nick, mu, "FAQ page (http://freenode.net/faq.shtml). Should you need more");
+	myuser_notice(nicksvs.nick, mu, "Knowledge Base page (http://freenode.net/kb/all). Should you need more");
 	myuser_notice(nicksvs.nick, mu, "help you can /join #freenode to find network staff.");
 }
 
@@ -53,12 +53,12 @@ static void chan_reg_notice(void *vptr)
 		return;
 
 	command_success_nodata(si, " ");
-	command_success_nodata(si, "Channel guidelines can be found on the freenode website");
-	command_success_nodata(si, "(http://freenode.net/channel_guidelines.shtml).");
+	command_success_nodata(si, "Channel guidelines can be found on the freenode website:");
+	command_success_nodata(si, "http://freenode.net/changuide");
 	if (mc->name[1] != '#')
 	{
 		command_success_nodata(si, "This is a primary namespace channel as per\n"
-				"http://freenode.net/policy.shtml#primarychannels");
+				"http://freenode.net/policies#channel-ownership");
 		command_success_nodata(si, "If you do not own this name, please consider\n"
 				"dropping %s and using #%s instead.",
 				mc->name, mc->name);
@@ -66,7 +66,7 @@ static void chan_reg_notice(void *vptr)
 	else
 	{
 		command_success_nodata(si, "This is an \"about\" channel as per");
-		command_success_nodata(si, "http://freenode.net/policy.shtml#topicalchannels");
+		command_success_nodata(si, "http://freenode.net/policies#channel-ownership");
 	}
 
 	mc->mlock_on = CMODE_NOEXT | CMODE_TOPIC | mode_to_flag('c');

@@ -34,7 +34,8 @@ SRCS = \
         log_sasl_fail.c \
 	cs_access.c		\
 	cs_successor_freenodestaff.c \
-	regnotice.c
+	regnotice.c \
+        noemailnotice.c
 
 # To compile your own modules, add them to SRCS or make blegh.so
 

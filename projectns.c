@@ -28,13 +28,13 @@ static void cmd_set(sourceinfo_t *si, int parc, char *parv[]);
 static void set_openreg(sourceinfo_t *si, int parc, char *parv[]);
 static void set_reginfo(sourceinfo_t *si, int parc, char *parv[]);
 
-command_t os_project = { "PROJECT", N_("Manages registered projects."), AC_NONE, 4, os_cmd_project, { .path = "freenode/os_project" } };
+command_t os_project = { "PROJECT", N_("Manages registered projects."), AC_NONE, 5, os_cmd_project, { .path = "freenode/os_project" } };
 
-command_t os_project_register = { "REGISTER", N_("Adds a project registration."), PRIV_PROJECT_ADMIN, 1, cmd_register, { .path = "freenode/os_project_register" } };
+command_t os_project_register = { "REGISTER", N_("Adds a project registration."), PRIV_PROJECT_ADMIN, 2, cmd_register, { .path = "freenode/os_project_register" } };
 command_t os_project_drop = { "DROP", N_("Deletes a project registration."), PRIV_PROJECT_ADMIN, 1, cmd_drop, { .path = "freenode/os_project_drop" } };
 command_t os_project_info = { "INFO", N_("Displays information about a project registration."), PRIV_PROJECT_AUSPEX, 1, cmd_info, { .path = "freenode/os_project_info" } };
 command_t os_project_list = { "LIST", N_("Lists project registrations."), PRIV_PROJECT_AUSPEX, 1, cmd_list, { .path = "freenode/os_project_list" } };
-command_t os_project_channel = { "CHANNEL", N_("Manages project channel namespaces."), PRIV_PROJECT_ADMIN, 3, cmd_channel, { .path = "freenode/os_project_channel" } };
+command_t os_project_channel = { "CHANNEL", N_("Manages project channel namespaces."), PRIV_PROJECT_ADMIN, 4, cmd_channel, { .path = "freenode/os_project_channel" } };
 command_t os_project_contact = { "CONTACT", N_("Manages project contacts."), PRIV_PROJECT_ADMIN, 3, cmd_contact, { .path = "freenode/os_project_contact" } };
 
 struct projectns {
@@ -179,6 +179,12 @@ static void cmd_register(sourceinfo_t *si, int parc, char *parv[])
 	{
 		command_fail(si, fault_needmoreparams, STR_INSUFFICIENT_PARAMS, "REGISTER");
 		command_fail(si, fault_needmoreparams, _("Syntax: PROJECT REGISTER <project>"));
+		return;
+	}
+
+	if (parc > 1)
+	{
+		command_fail(si, fault_badparams, _("For technical reasons, project names cannot contain spaces."));
 		return;
 	}
 
@@ -365,6 +371,7 @@ static void cmd_channel(sourceinfo_t *si, int parc, char *parv[])
 	char *project   = parv[0];
 	char *mode      = parv[1];
 	char *namespace = parv[2];
+	char *trailing  = parv[3];
 
 	enum {
 		CHANNS_BAD = 0,
@@ -380,7 +387,7 @@ static void cmd_channel(sourceinfo_t *si, int parc, char *parv[])
 			add_or_del = CHANNS_DEL;
 	}
 
-	if (!namespace || !add_or_del)
+	if (!namespace || !add_or_del || trailing)
 	{
 		cmd_faultcode_t fault = (namespace ? fault_badparams : fault_needmoreparams);
 

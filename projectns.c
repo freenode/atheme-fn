@@ -15,6 +15,9 @@
 #define PRIV_PROJECT_ADMIN  "project:admin"
 #define PRIV_PROJECT_AUSPEX "project:auspex"
 
+// Arbitrary number that should avoid truncation even with various protocol overhead
+#define PROJECTNAMELEN CHANNELLEN
+
 static mowgli_patricia_t *project_cmdtree;
 
 static void os_cmd_project(sourceinfo_t *si, int parc, char *parv[]);
@@ -66,9 +69,9 @@ static bool is_valid_project_name(const char * const name)
 {
 	/* Screen for anything that'd break parameter parsing or the protocol.
 	 * Don't check for other kinds of stupidity as this module is meant to
-	 * be used by network staff, who should know better.
+	 * be used by network staff, who should know better. *grumble*
 	 */
-	return !(strchr(name, ' ') || strchr(name, '\n') || strchr(name, '\r'));
+	return !(strchr(name, ' ') || strchr(name, '\n') || strchr(name, '\r') || strlen(name) >= PROJECTNAMELEN);
 }
 
 static mowgli_list_t *entity_get_projects(myentity_t *mt)
@@ -399,7 +402,7 @@ static void cmd_channel(sourceinfo_t *si, int parc, char *parv[])
 		return;
 	}
 
-	if (namespace[0] != '#')
+	if (namespace[0] != '#' || strlen(namespace) >= CHANNELLEN)
 	{
 		command_fail(si, fault_badparams, _("\2%s\2 is not a valid channel name."), namespace);
 		return;

@@ -696,6 +696,36 @@ static void write_projects_db(database_handle_t *db)
 	}
 }
 
+/* FIXME: This should hook into non-user entity deletions
+ * as well (e.g. groupserv groups). Atheme does not currently
+ * provide a generic entity deletion hook so this will have to do.
+ */
+static void userdelete_hook(myuser_t *mu)
+{
+	mowgli_list_t *l = entity_get_projects(entity(mu));
+	mowgli_node_t *n, *tn;
+
+	MOWGLI_ITER_FOREACH_SAFE(n, tn, l->head)
+	{
+		struct projectns *p = n->data;
+		mowgli_node_delete(n, l);
+		mowgli_node_free(n);
+
+		slog(LG_REGISTER, _("PROJECT:CONTACT:LOST: \2%s\2 from \2%s\2"), entity(mu)->name, p->name);
+
+		mowgli_node_t *n2, *tn2;
+		MOWGLI_ITER_FOREACH_SAFE(n2, tn2, p->contacts.head)
+		{
+			if (entity(mu) == (myentity_t*)n2->data)
+			{
+				mowgli_node_delete(n2, &p->contacts);
+				mowgli_node_free(n2);
+				break;
+			}
+		}
+	}
+}
+
 static void userinfo_hook(hook_user_req_t *hdata)
 {
 	if (hdata->si->smu == hdata->mu ||
@@ -817,6 +847,9 @@ static void mod_init(module_t *m)
 	hook_add_event("user_info");
 	hook_add_user_info(userinfo_hook);
 
+	hook_add_event("myuser_delete");
+	hook_add_myuser_delete(userdelete_hook);
+
 	hook_add_event("channel_info");
 	hook_add_channel_info(chaninfo_hook);
 
@@ -862,6 +895,7 @@ static void mod_deinit(module_unload_intent_t unused)
 	mowgli_patricia_destroy(projects, free_project_cb, NULL);
 
 	hook_del_user_info(userinfo_hook);
+	hook_del_myuser_delete(userdelete_hook);
 	hook_del_channel_info(chaninfo_hook);
 	hook_del_db_write(write_projects_db);
 	hook_del_channel_can_register(try_register_hook);

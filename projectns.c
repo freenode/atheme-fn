@@ -786,7 +786,7 @@ static void did_register_hook(hook_channel_req_t *hdata)
 	free(namespace);
 }
 
-static void _modinit(module_t *m)
+static void mod_init(module_t *m)
 {
 	MODULE_TRY_REQUEST_DEPENDENCY(m, "operserv/main");
 	MODULE_TRY_REQUEST_DEPENDENCY(m, "chanserv/main");
@@ -835,7 +835,7 @@ static void free_project_cb(const char *key, void *data, void *privdata)
 	free(data);
 }
 
-static void _moddeinit(module_unload_intent_t unused)
+static void mod_deinit(module_unload_intent_t unused)
 {
 	service_named_unbind_command("operserv", &os_project);
 
@@ -870,6 +870,6 @@ static void _moddeinit(module_unload_intent_t unused)
 
 DECLARE_MODULE_V1
 (
-	"freenode/projectns", MODULE_UNLOAD_CAPABILITY_NEVER, _modinit, _moddeinit,
+	"freenode/projectns", MODULE_UNLOAD_CAPABILITY_NEVER, mod_init, mod_deinit,
 	"", "freenode <http://www.freenode.net>"
 );

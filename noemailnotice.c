@@ -37,9 +37,9 @@ static void user_identify_notice(user_t *u)
 	}
 	if (!validemail(mu->email))
 	{
-		notice(nicksvs.nick, mu, "WARNING: Your NickServ account does not have a valid email address set.");
-		notice(nicksvs.nick, mu, "Should you forget your password it may not be possible to recover your acccount.");
-		notice(nicksvs.nick, mu, "For help setting an email address, see \2/msg NickServ HELP SET EMAIL\2.");
-		notice(nicksvs.nick, mu, "Should you need more assistance you can /join #freenode to find network staff.");
+		notice(nicksvs.nick, u->nick, "WARNING: Your NickServ account does not have a valid email address set.");
+		notice(nicksvs.nick, u->nick, "Should you forget your password it may not be possible to recover your acccount.");
+		notice(nicksvs.nick, u->nick, "For help setting an email address, see \2/msg NickServ HELP SET EMAIL\2.");
+		notice(nicksvs.nick, u->nick, "Should you need more assistance you can /join #freenode to find network staff.");
 	}
 }

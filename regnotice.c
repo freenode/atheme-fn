@@ -70,7 +70,7 @@ static void chan_reg_notice(void *vptr)
 
 DECLARE_MODULE_V1
 (
-	"freenode/regnotice", FALSE, mod_init, mod_deinit,
+	"freenode/regnotice", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
 	"$Id: regnotice.c 69 2013-03-25 13:07:19Z stephen $",
 	"freenode <http://www.freenode.net>"
 );

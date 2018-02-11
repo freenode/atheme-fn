@@ -121,7 +121,7 @@ static void set_unfiltered_on_identify(void *vptr)
 
 DECLARE_MODULE_V1
 (
-	"freenode/ns_set_unfiltered", false, mod_init, mod_deinit,
+	"freenode/ns_set_unfiltered", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
 	"$Id$",
 	"freenode <http://www.freenode.net>"
 );

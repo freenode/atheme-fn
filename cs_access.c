@@ -186,7 +186,7 @@ static void cs_cmd_access(sourceinfo_t *si, int parc, char *parv[])
 
 DECLARE_MODULE_V1
 (
-	"freenode/cs_access", FALSE, mod_init, mod_deinit,
+	"freenode/cs_access", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
 	"$Id: cs_access.c 68 2012-06-16 20:44:28Z stephen $",
 	"freenode <http://www.freenode.net>"
 );

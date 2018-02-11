@@ -108,7 +108,7 @@ void ns_cmd_regain(sourceinfo_t *si, int parc, char *parv[])
 
 DECLARE_MODULE_V1
 (
-	"freenode/ns_regain", FALSE, mod_init, mod_deinit,
+	"freenode/ns_regain", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
 	"$Id: ns_regain.c 47 2008-02-02 22:51:09Z jilles $",
 	"freenode <http://www.freenode.net>"
 );

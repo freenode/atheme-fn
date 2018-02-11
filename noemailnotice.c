@@ -39,7 +39,7 @@ static void user_identify_notice(user_t *u)
 
 DECLARE_MODULE_V1
 (
-	"freenode/noemailnotice", FALSE, mod_init, mod_deinit,
+	"freenode/noemailnotice", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
 	PACKAGE_STRING,
 	"freenode <http://freenode.net>"
 );

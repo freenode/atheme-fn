@@ -37,7 +37,7 @@ static void mod_deinit(module_unload_intent_t intent)
 
 DECLARE_MODULE_V1
 (
-	"freenode/cs_successor_freenodestaff", false, mod_init, mod_deinit,
+	"freenode/cs_successor_freenodestaff", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
 	"$Id: cs_successor_freenodestaff.c 65 2012-06-09 12:25:31Z stephen $",
 	"freenode <http://freenode.net>"
 );

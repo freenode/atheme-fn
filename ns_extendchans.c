@@ -172,7 +172,7 @@ static void extendchans_on_identify(void *vptr)
 
 DECLARE_MODULE_V1
 (
-	"freenode/ns_extendchans", false, mod_init, mod_deinit,
+	"freenode/ns_extendchans", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
 	"$Id: ns_extendchans.c 62 2010-01-24 01:50:28Z stephen $",
 	"freenode <http://www.freenode.net>"
 );

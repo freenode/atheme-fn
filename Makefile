@@ -35,6 +35,7 @@ SRCS = \
 	cs_access.c		\
 	cs_successor_freenodestaff.c \
 	regnotice.c \
+	noemailnotice.c \
 	projectns.c
 
 # To compile your own modules, add them to SRCS or make blegh.so

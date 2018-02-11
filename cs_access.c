@@ -10,24 +10,17 @@
 #include "atheme.h"
 #include "template.h"
 
-DECLARE_MODULE_V1
-(
-	"freenode/cs_access", FALSE, _modinit, _moddeinit,
-	"$Id: cs_access.c 68 2012-06-16 20:44:28Z stephen $",
-	"freenode <http://www.freenode.net>"
-);
-
 static void cs_cmd_access(sourceinfo_t *si, int parc, char *parv[]);
 
 command_t cs_access = { "ACCESS", "Manipulates channel access lists.",
                          AC_NONE, 4, cs_cmd_access, { .path = "freenode/cs_access" } };
 
-void _modinit(module_t *m)
+static void mod_init(module_t *m)
 {
 	service_named_bind_command("chanserv", &cs_access);
 }
 
-void _moddeinit(module_unload_intent_t intent)
+static void mod_deinit(module_unload_intent_t intent)
 {
 	service_named_unbind_command("chanserv", &cs_access);
 }
@@ -190,3 +183,10 @@ static void cs_cmd_access(sourceinfo_t *si, int parc, char *parv[])
 	else
 		command_fail(si, fault_badparams, _("Invalid command. Use \2/%s%s help\2 for a command listing."), (ircd->uses_rcommand == FALSE) ? "msg " : "", si->service->disp);
 }
+
+DECLARE_MODULE_V1
+(
+	"freenode/cs_access", FALSE, mod_init, mod_deinit,
+	"$Id: cs_access.c 68 2012-06-16 20:44:28Z stephen $",
+	"freenode <http://www.freenode.net>"
+);

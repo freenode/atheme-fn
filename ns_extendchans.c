@@ -12,13 +12,6 @@
 #include "atheme.h"
 #include "uplink.h"
 
-DECLARE_MODULE_V1
-(
-	"freenode/ns_extendchans", false, _modinit, _moddeinit,
-	"$Id: ns_extendchans.c 62 2010-01-24 01:50:28Z stephen $",
-	"freenode <http://www.freenode.net>"
-);
-
 list_t *ns_cmdtree, *ns_helptree;
 
 static void extendchans_on_identify(void *vptr);
@@ -30,7 +23,7 @@ static void show_extendchans(void *vdata);
 command_t ns_extendchans = { "EXTENDCHANS", N_("Enables or disables extendchans for a user."), PRIV_USER_ADMIN, 2, ns_cmd_extendchans };
 command_t ns_listextendchans = { "LISTEXTENDCHANS", N_("Lists accounts with extendchans enabled."), PRIV_USER_AUSPEX, 1, ns_cmd_listextendchans };
 
-void _modinit(module_t *m)
+static void mod_init(module_t *m)
 {
 	MODULE_USE_SYMBOL(ns_cmdtree, "nickserv/main", "ns_cmdtree");
 	MODULE_USE_SYMBOL(ns_helptree, "nickserv/main", "ns_helptree");
@@ -45,7 +38,7 @@ void _modinit(module_t *m)
 	help_addentry(ns_helptree, "LISTEXTENDCHANS", "help/nickserv/listextendchans", NULL);
 }
 
-void _moddeinit(void)
+static void mod_deinit(void)
 {
 	hook_del_hook("user_identify", extendchans_on_identify);
 	hook_del_hook("user_info", show_extendchans);
@@ -176,6 +169,13 @@ static void extendchans_on_identify(void *vptr)
 
 	do_extendchans(u, true);
 }
+
+DECLARE_MODULE_V1
+(
+	"freenode/ns_extendchans", false, mod_init, mod_deinit,
+	"$Id: ns_extendchans.c 62 2010-01-24 01:50:28Z stephen $",
+	"freenode <http://www.freenode.net>"
+);
 
 /* vim:cinoptions=>s,e0,n0,f0,{0,}0,^0,=s,ps,t0,c3,+s,(2s,us,)20,*30,gs,hs
  * vim:ts=8

@@ -8,22 +8,15 @@
 
 #include "atheme.h"
 
-DECLARE_MODULE_V1
-(
-	"freenode/noemailnotice", FALSE, _modinit, _moddeinit,
-	PACKAGE_STRING,
-	"freenode <http://freenode.net>"
-);
-
 static void user_identify_notice(user_t *u);
 
-void _modinit(module_t *m)
+static void mod_init(module_t *m)
 {
 	hook_add_event("user_identify");
 	hook_add_user_identify(user_identify_notice);
 }
 
-void _moddeinit(module_unload_intent_t intentvoid)
+static void mod_deinit(module_unload_intent_t intentvoid)
 {
 	hook_del_user_identify(user_identify_notice);
 }
@@ -43,3 +36,10 @@ static void user_identify_notice(user_t *u)
 		notice(nicksvs.nick, u->nick, "Should you need more assistance you can /join #freenode to find network staff.");
 	}
 }
+
+DECLARE_MODULE_V1
+(
+	"freenode/noemailnotice", FALSE, mod_init, mod_deinit,
+	PACKAGE_STRING,
+	"freenode <http://freenode.net>"
+);

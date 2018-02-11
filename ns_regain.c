@@ -10,20 +10,13 @@
 
 #include "atheme.h"
 
-DECLARE_MODULE_V1
-(
-	"freenode/ns_regain", FALSE, _modinit, _moddeinit,
-	"$Id: ns_regain.c 47 2008-02-02 22:51:09Z jilles $",
-	"freenode <http://www.freenode.net>"
-);
-
 static void ns_cmd_regain(sourceinfo_t *si, int parc, char *parv[]);
 
 command_t ns_regain = { "REGAIN", N_("Reclaims use of a nickname."), AC_NONE, 2, ns_cmd_regain };
 
 list_t *ns_cmdtree, *ns_helptree;
 
-void _modinit(module_t *m)
+static void mod_init(module_t *m)
 {
 	MODULE_USE_SYMBOL(ns_cmdtree, "nickserv/main", "ns_cmdtree");
 	MODULE_USE_SYMBOL(ns_helptree, "nickserv/main", "ns_helptree");
@@ -32,7 +25,7 @@ void _modinit(module_t *m)
 	help_addentry(ns_helptree, "REGAIN", "help/nickserv/regain", NULL);
 }
 
-void _moddeinit()
+static void mod_deinit()
 {
 	command_delete(&ns_regain, ns_cmdtree);
 	help_delentry(ns_helptree, "REGAIN");
@@ -112,6 +105,13 @@ void ns_cmd_regain(sourceinfo_t *si, int parc, char *parv[])
 		command_fail(si, fault_noprivs, _("You may not regain \2%s\2."), target);
 	}
 }
+
+DECLARE_MODULE_V1
+(
+	"freenode/ns_regain", FALSE, mod_init, mod_deinit,
+	"$Id: ns_regain.c 47 2008-02-02 22:51:09Z jilles $",
+	"freenode <http://www.freenode.net>"
+);
 
 /* vim:cinoptions=>s,e0,n0,f0,{0,}0,^0,=s,ps,t0,c3,+s,(2s,us,)20,*30,gs,hs
  * vim:ts=8

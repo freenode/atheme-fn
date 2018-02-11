@@ -9,17 +9,10 @@
 
 #include "atheme.h"
 
-DECLARE_MODULE_V1
-(
-	"freenode/regnotice", FALSE, _modinit, _moddeinit,
-	"$Id: regnotice.c 69 2013-03-25 13:07:19Z stephen $",
-	"freenode <http://www.freenode.net>"
-);
-
 static void nick_reg_notice(void *vptr);
 static void chan_reg_notice(void *vptr);
 
-void _modinit(module_t *m)
+static void mod_init(module_t *m)
 {
 	hook_add_event("user_register");
 	hook_add_hook("user_register", nick_reg_notice);
@@ -27,7 +20,7 @@ void _modinit(module_t *m)
 	hook_add_hook_first("channel_register", chan_reg_notice);
 }
 
-void _moddeinit(module_unload_intent_t intentvoid)
+static void mod_deinit(module_unload_intent_t intentvoid)
 {
 	hook_del_hook("user_register", nick_reg_notice);
 	hook_del_hook("channel_register", chan_reg_notice);
@@ -74,3 +67,10 @@ static void chan_reg_notice(void *vptr)
 	/* not needed now that we have founder_flags in config */
 	/*chanacs_change_simple(mc, &si->smu->ent, NULL, 0, CA_AUTOOP);*/
 }
+
+DECLARE_MODULE_V1
+(
+	"freenode/regnotice", FALSE, mod_init, mod_deinit,
+	"$Id: regnotice.c 69 2013-03-25 13:07:19Z stephen $",
+	"freenode <http://www.freenode.net>"
+);

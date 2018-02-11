@@ -12,8 +12,6 @@
 #include "pmodule.h"
 #include "oftc-hybrid.h"
 
-DECLARE_MODULE_V1("protocol/hybrid", TRUE, _modinit, NULL, "$Id: oftc-hybrid.c 22 2007-09-20 19:26:07Z jilles $", "");
-
 /* *INDENT-OFF* */
 
 ircd_t Hybrid = {
@@ -1131,7 +1129,7 @@ static void nick_ungroup(hook_user_req_t *hdata)
 		sts(":%s SVSMODE %s -R", ME, CLIENT_NAME(u));
 }
 
-void _modinit(module_t * m)
+static void mod_init(module_t * m)
 {
 	/* Symbol relocation voodoo. */
 	server_login = &hybrid_server_login;
@@ -1216,6 +1214,8 @@ void _modinit(module_t * m)
 
 	pmodule_loaded = TRUE;
 }
+
+DECLARE_MODULE_V1("protocol/hybrid", TRUE, mod_init, NULL, "$Id: oftc-hybrid.c 22 2007-09-20 19:26:07Z jilles $", "");
 
 /* vim:cinoptions=>s,e0,n0,f0,{0,}0,^0,=s,ps,t0,c3,+s,(2s,us,)20,*30,gs,hs
  * vim:ts=8

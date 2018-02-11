@@ -8,13 +8,6 @@
 
 #include "atheme.h"
 
-DECLARE_MODULE_V1
-(
-	"freenode/cs_successor_freenodestaff", false, _modinit, _moddeinit,
-	"$Id: cs_successor_freenodestaff.c 65 2012-06-09 12:25:31Z stephen $",
-	"freenode <http://freenode.net>"
-);
-
 static void channel_pick_successor_hook(hook_channel_succession_req_t *req)
 {
 	return_if_fail(req != NULL);
@@ -32,12 +25,19 @@ static void channel_pick_successor_hook(hook_channel_succession_req_t *req)
 	req->mu = myuser_find("freenode-staff");
 }
 
-void _modinit(module_t *m)
+static void mod_init(module_t *m)
 {
 	hook_add_first_channel_pick_successor(channel_pick_successor_hook);
 }
 
-void _moddeinit(module_unload_intent_t intent)
+static void mod_deinit(module_unload_intent_t intent)
 {
 	hook_del_channel_pick_successor(channel_pick_successor_hook);
 }
+
+DECLARE_MODULE_V1
+(
+	"freenode/cs_successor_freenodestaff", false, mod_init, mod_deinit,
+	"$Id: cs_successor_freenodestaff.c 65 2012-06-09 12:25:31Z stephen $",
+	"freenode <http://freenode.net>"
+);

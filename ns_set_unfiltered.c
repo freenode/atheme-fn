@@ -11,13 +11,6 @@
 #include "atheme.h"
 #include "uplink.h"
 
-DECLARE_MODULE_V1
-(
-	"freenode/ns_set_unfiltered", false, _modinit, _moddeinit,
-	"$Id$",
-	"freenode <http://www.freenode.net>"
-);
-
 list_t *ns_set_cmdtree, *ns_helptree;
 
 static void set_unfiltered_on_identify(void *vptr);
@@ -25,7 +18,7 @@ static void ns_cmd_set_unfiltered(sourceinfo_t *si, int parc, char *parv[]);
 
 command_t ns_set_unfiltered = { "UNFILTERED", N_("Allows messages from unregistered users."), AC_NONE, 1, ns_cmd_set_unfiltered };
 
-void _modinit(module_t *m)
+static void mod_init(module_t *m)
 {
 	MODULE_USE_SYMBOL(ns_set_cmdtree, "nickserv/set", "ns_set_cmdtree");
 	MODULE_USE_SYMBOL(ns_helptree, "nickserv/main", "ns_helptree");
@@ -36,7 +29,7 @@ void _modinit(module_t *m)
 	help_addentry(ns_helptree, "SET UNFILTERED", "help/nickserv/set_unfiltered", NULL);
 }
 
-void _moddeinit(void)
+static void mod_deinit(void)
 {
 	hook_del_hook("user_identify", set_unfiltered_on_identify);
 	command_delete(&ns_set_unfiltered, ns_set_cmdtree);
@@ -125,6 +118,13 @@ static void set_unfiltered_on_identify(void *vptr)
 
 	do_set_unfiltered(u, true);
 }
+
+DECLARE_MODULE_V1
+(
+	"freenode/ns_set_unfiltered", false, mod_init, mod_deinit,
+	"$Id$",
+	"freenode <http://www.freenode.net>"
+);
 
 /* vim:cinoptions=>s,e0,n0,f0,{0,}0,^0,=s,ps,t0,c3,+s,(2s,us,)20,*30,gs,hs
  * vim:ts=8

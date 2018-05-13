@@ -1,0 +1,9 @@
+Help for DROP:
+
+DROP completely removes an existing project registration from the
+services database. This action cannot easily be undone.
+
+Syntax: DROP <project>
+
+Examples:
+    /msg &nick& DROP CoolProject

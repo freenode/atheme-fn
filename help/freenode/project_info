@@ -1,0 +1,10 @@
+Help for INFO:
+
+The INFO command provides an overview of all relevant information
+about a project registration, including channel namespaces, group contacts,
+marks set (if any), and other applicable properties.
+
+Syntax: INFO <project>
+
+Examples:
+    /msg &nick& INFO CoolProject

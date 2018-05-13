@@ -1,0 +1,11 @@
+Help for CONTACT:
+
+The CONTACT command allows to maintain the list of a project's
+registered group contacts. Group contacts can gain full access
+to any channel within their project's namespaces.
+
+Syntax: CONTACT <project> ADD|DEL <account>
+
+Examples:
+    /msg &nick& CONTACT CoolProject ADD NewMaintainer
+    /msg &nick& CONTACT CoolProject DEL RetiredGC

@@ -1,0 +1,10 @@
+Help for REGISTER:
+
+REGISTER allows to create project registrations in services.
+The project identifier has to be a single word and is not
+case-sensitive.
+
+Syntax: REGISTER <project>
+
+Examples:
+    /msg &nick& REGISTER CoolProject

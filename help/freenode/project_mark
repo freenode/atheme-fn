@@ -1,0 +1,14 @@
+Help for MARK:
+
+MARK is a facility to add free-form notes to a project registration.
+These notes are only visible to network staff and are not displayed
+to group contacts.
+
+Syntax: MARK <project> ADD <note>
+Syntax: MARK <project> DEL <number>
+Syntax: MARK <project> LIST
+
+Examples:
+    /msg &nick& MARK CoolProject ADD List of member cloaks on their wiki: ...
+    /msg &nick& MARK CoolProject DEL 5
+    /msg &nick& MARK CoolProject LIST

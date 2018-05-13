@@ -1,0 +1,13 @@
+Help for SET REGINFO:
+
+SET REGINFO allows a message (typically a URL) to be configured that
+will be displayed in a "see also" message to users who (try to) register
+channels in a given project's namespace.
+
+Specify an empty message to suppress the additional notice.
+
+Syntax: SET <project> REGINFO [message]
+
+Examples:
+    /msg &nick& SET CoolProject REGINFO https://example.org/
+    /msg &nick& SET CoolProject REGINFO

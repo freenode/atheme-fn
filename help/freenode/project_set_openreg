@@ -1,0 +1,10 @@
+Help for SET OPENREG:
+
+The OPENREG flag, if enabled, allows anyone to register channels in
+a project's namespaces. Conversely, disabling the flag only allows
+group contacts to register such channels.
+
+Syntax: SET <project> OPENREG ON|OFF
+
+Examples:
+    /msg &nick& SET CoolProject OPENREG ON

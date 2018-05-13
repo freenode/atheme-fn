@@ -1,0 +1,11 @@
+Help for CHANNEL:
+
+Project channel namespaces are managed with the CHANNEL command.
+A channel namespace is identified by a base channel name and includes
+any sub-channels, typically separated by a - character.
+
+Syntax: CHANNEL <project> ADD|DEL <#channel>
+
+Examples:
+    /msg &nick& CHANNEL CoolProject ADD #cool
+    /msg &nick& CHANNEL CoolProject DEL #projectcool

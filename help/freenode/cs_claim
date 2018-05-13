@@ -1,0 +1,9 @@
+Help for CLAIM:
+
+The CLAIM command allows you to take control of a channel
+belonging to a project you are authorized to represent.
+
+Syntax: CLAIM <#channel>
+
+Examples:
+    /msg &nick& CLAIM #coolproject-dev

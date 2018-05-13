@@ -1,0 +1,9 @@
+Help for LIST:
+
+LIST finds all registered projects matching a simple glob pattern.
+
+Syntax: LIST <pattern>
+
+Examples:
+    /msg &nick& LIST *
+    /msg &nick& LIST Wiki*

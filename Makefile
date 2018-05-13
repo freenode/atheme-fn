@@ -36,7 +36,17 @@ SRCS = \
 	cs_successor_freenodestaff.c \
 	regnotice.c \
 	noemailnotice.c \
-	projectns.c
+	projectns/main.c \
+	projectns/help.c \
+	projectns/info.c \
+	projectns/list.c \
+	projectns/contact.c \
+	projectns/channel.c \
+	projectns/mark.c \
+	projectns/hooks.c \
+	projectns/set.c \
+	projectns/manage.c \
+	projectns/cs_claim.c
 
 # To compile your own modules, add them to SRCS or make blegh.so
 
@@ -48,6 +58,8 @@ all: ${OBJS} ${OTHER}
 install:
 	${INSTALL} -m 755 -d $(DESTDIR)${MODDIR}/modules/freenode
 	${INSTALL} -m 755 *.so $(DESTDIR)${MODDIR}/modules/freenode
+	${INSTALL} -m 755 -d $(DESTDIR)${MODDIR}/modules/freenode/projectns
+	${INSTALL} -m 755 projectns/*.so $(DESTDIR)${MODDIR}/modules/freenode/projectns
 	${INSTALL} -m 755 -d $(DESTDIR)${bindir}
 	${INSTALL} -m 755 ${OTHER} $(DESTDIR)${bindir}
 	$(INSTALL) -m 755 -d $(DESTDIR)$(SHAREDIR)/help

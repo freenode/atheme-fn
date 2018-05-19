@@ -25,15 +25,34 @@ static void userinfo_hook(hook_user_req_t *hdata)
 			struct projectns *project = n->data;
 
 			mowgli_node_t *n2;
-			char buf[BUFSIZE] = "";
+			char chan_buf[BUFSIZE] = "";
+			char cloak_buf[BUFSIZE] = "";
 			MOWGLI_ITER_FOREACH(n2, project->channel_ns.head)
 			{
-				if (buf[0])
-					mowgli_strlcat(buf, ", ", sizeof buf);
-				mowgli_strlcat(buf, (const char*)n2->data, sizeof buf);
+				if (chan_buf[0])
+					mowgli_strlcat(chan_buf, ", ", sizeof chan_buf);
+				mowgli_strlcat(chan_buf, (const char*)n2->data, sizeof chan_buf);
+			}
+			MOWGLI_ITER_FOREACH(n2, project->cloak_ns.head)
+			{
+				if (cloak_buf[0])
+					mowgli_strlcat(cloak_buf, ", ", sizeof cloak_buf);
+
+				char ns[BUFSIZE];
+				snprintf(ns, sizeof ns, "%s/*", (const char*)n2->data);
+				mowgli_strlcat(cloak_buf, ns, sizeof cloak_buf);
 			}
 
-			command_success_nodata(hdata->si, "Group contact for %s (%s)", project->name, buf);
+			char full_buf[BUFSIZE] = "";
+			mowgli_strlcat(full_buf, chan_buf, sizeof full_buf);
+			if (full_buf[0] && cloak_buf[0])
+				mowgli_strlcat(full_buf, "; ", sizeof full_buf);
+			mowgli_strlcat(full_buf, cloak_buf, sizeof full_buf);
+
+			if (full_buf[0])
+				command_success_nodata(hdata->si, _("Group contact for %s (%s)"), project->name, full_buf);
+			else
+				command_success_nodata(hdata->si, _("Group contact for %s"), project->name);
 		}
 	}
 }

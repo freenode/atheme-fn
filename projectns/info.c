@@ -47,6 +47,17 @@ static void cmd_info(sourceinfo_t *si, int parc, char *parv[])
 
 	buf[0] = '\0';
 
+	MOWGLI_ITER_FOREACH(n, p->cloak_ns.head)
+	{
+		if (buf[0])
+			mowgli_strlcat(buf, ", ", sizeof buf);
+		mowgli_strlcat(buf, (const char*)n->data, sizeof buf);
+	}
+
+	command_success_nodata(si, _("Cloak namespaces: %s"), (buf[0] ? buf : "(none)"));
+
+	buf[0] = '\0';
+
 	MOWGLI_ITER_FOREACH(n, p->contacts.head)
 	{
 		if (buf[0])

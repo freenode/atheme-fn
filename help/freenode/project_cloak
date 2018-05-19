@@ -1,0 +1,10 @@
+Help for CLOAK:
+
+Project cloak namespaces are managed with the CLOAK command.
+A cloak namespace is identified by the base part of the cloak.
+
+Syntax: CLOAK <project> ADD|DEL <namespace>
+
+Examples:
+    /msg &nick& CLOAK TopicGroup ADD about/sometopic
+    /msg &nick& CLOAK CoolProject DEL coolproject

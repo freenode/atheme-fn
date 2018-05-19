@@ -15,6 +15,7 @@
 #define DB_TYPE_REGINFO           "FNGRI"
 #define DB_TYPE_CONTACT           "FNGC"
 #define DB_TYPE_CHANNEL_NAMESPACE "FNCNS"
+#define DB_TYPE_CLOAK_NAMESPACE   "FNHNS"
 #define DB_TYPE_MARK              "FNGM"
 
 unsigned int projectns_abirev = PROJECTNS_ABIREV;
@@ -78,6 +79,14 @@ void project_destroy(struct projectns * const p)
 		free(ns);
 
 		mowgli_node_delete(n, &p->channel_ns);
+		mowgli_node_free(n);
+	}
+	MOWGLI_ITER_FOREACH_SAFE(n, tn, p->cloak_ns.head)
+	{
+		char *ns = n->data;
+		free(ns);
+
+		mowgli_node_delete(n, &p->cloak_ns);
 		mowgli_node_free(n);
 	}
 	MOWGLI_ITER_FOREACH_SAFE(n, tn, p->marks.head)
@@ -242,6 +251,16 @@ static void db_h_channelns(database_handle_t *db, const char *type)
 	mowgli_node_add(sstrdup(namespace), mowgli_node_create(), &project->channel_ns);
 }
 
+static void db_h_cloakns(database_handle_t *db, const char *type)
+{
+	const char *project_name = db_sread_word(db);
+	const char *namespace    = db_sread_word(db);
+
+	struct projectns *project = mowgli_patricia_retrieve(projectsvs.projects, project_name);
+
+	mowgli_node_add(sstrdup(namespace), mowgli_node_create(), &project->cloak_ns);
+}
+
 static void write_projects_db(database_handle_t *db)
 {
 	mowgli_patricia_iteration_state_t state;
@@ -287,6 +306,14 @@ static void write_projects_db(database_handle_t *db)
 		MOWGLI_ITER_FOREACH(n, project->channel_ns.head)
 		{
 			db_start_row(db, DB_TYPE_CHANNEL_NAMESPACE);
+			db_write_word(db, project->name);
+			db_write_word(db, (char*)n->data);
+			db_commit_row(db);
+		}
+
+		MOWGLI_ITER_FOREACH(n, project->cloak_ns.head)
+		{
+			db_start_row(db, DB_TYPE_CLOAK_NAMESPACE);
 			db_write_word(db, project->name);
 			db_write_word(db, (char*)n->data);
 			db_commit_row(db);
@@ -364,6 +391,7 @@ static void mod_init(module_t *const restrict m)
 		{
 			mowgli_patricia_delete(rec->projects, old_p->name);
 			struct projectns *new = smalloc(sizeof(*new));
+			memset(new, 0, sizeof *new);
 			new->name = old_p->name;
 			new->any_may_register = old_p->any_may_register;
 			new->reginfo = old_p->reginfo;
@@ -389,6 +417,11 @@ static void mod_init(module_t *const restrict m)
 			MOWGLI_ITER_FOREACH(n, new->contacts.head)
 			{
 				mowgli_node_add(new, mowgli_node_create(), entity_get_projects(n->data));
+			}
+
+			if (rec->version >= PROJECTNS_MINVER_CLOAKNS)
+			{
+				new->cloak_ns = old_p->cloak_ns;
 			}
 
 			/* If you wish to restore anything else, it will not have been there
@@ -418,6 +451,7 @@ static void mod_init(module_t *const restrict m)
 	db_register_type_handler(DB_TYPE_REGINFO, db_h_reginfo);
 	db_register_type_handler(DB_TYPE_CONTACT, db_h_contact);
 	db_register_type_handler(DB_TYPE_CHANNEL_NAMESPACE, db_h_channelns);
+	db_register_type_handler(DB_TYPE_CLOAK_NAMESPACE, db_h_cloakns);
 
 	hook_add_event("db_write");
 	hook_add_db_write(write_projects_db);
@@ -473,6 +507,7 @@ static void mod_deinit(const module_unload_intent_t intent)
 	db_unregister_type_handler(DB_TYPE_REGINFO);
 	db_unregister_type_handler(DB_TYPE_CONTACT);
 	db_unregister_type_handler(DB_TYPE_CHANNEL_NAMESPACE);
+	db_unregister_type_handler(DB_TYPE_CLOAK_NAMESPACE);
 
 	hook_del_myuser_delete(userdelete_hook);
 	hook_del_db_write(write_projects_db);

@@ -59,10 +59,13 @@ static void cmd_cloak(sourceinfo_t *si, int parc, char *parv[])
 		return;
 	}
 
-	if (!is_valid_host(namespace))
+	for (char *c = namespace; *c; c++)
 	{
-		command_fail(si, fault_badparams, _("The provided cloak namespace is not a valid host."));
-		return;
+		if (!isprint(*c))
+		{
+			command_fail(si, fault_badparams, _("The provided cloak namespace contains invalid characters."));
+			return;
+		}
 	}
 
 	struct projectns *p = mowgli_patricia_retrieve(projectsvs->projects, project);

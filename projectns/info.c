@@ -38,6 +38,11 @@ static void cmd_info(sourceinfo_t *si, int parc, char *parv[])
 	mowgli_node_t *n;
 	MOWGLI_ITER_FOREACH(n, p->channel_ns.head)
 	{
+		if (strlen(buf) > 80)
+		{
+			command_success_nodata(si, _("Channel namespaces: %s"), buf);
+			buf[0] = '\0';
+		}
 		if (buf[0])
 			mowgli_strlcat(buf, ", ", sizeof buf);
 		mowgli_strlcat(buf, (const char*)n->data, sizeof buf);
@@ -49,6 +54,11 @@ static void cmd_info(sourceinfo_t *si, int parc, char *parv[])
 
 	MOWGLI_ITER_FOREACH(n, p->cloak_ns.head)
 	{
+		if (strlen(buf) > 80)
+		{
+			command_success_nodata(si, _("Cloak namespaces: %s"), buf);
+			buf[0] = '\0';
+		}
 		if (buf[0])
 			mowgli_strlcat(buf, ", ", sizeof buf);
 		mowgli_strlcat(buf, (const char*)n->data, sizeof buf);
@@ -60,6 +70,11 @@ static void cmd_info(sourceinfo_t *si, int parc, char *parv[])
 
 	MOWGLI_ITER_FOREACH(n, p->contacts.head)
 	{
+		if (strlen(buf) > 80)
+		{
+			command_success_nodata(si, _("Group contacts: %s"), buf);
+			buf[0] = '\0';
+		}
 		if (buf[0])
 			mowgli_strlcat(buf, ", ", sizeof buf);
 		mowgli_strlcat(buf, ((myentity_t*)n->data)->name, sizeof buf);

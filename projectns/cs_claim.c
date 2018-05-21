@@ -94,6 +94,22 @@ static void cmd_claim(sourceinfo_t *si, int parc, char *parv[])
 	}
 	else
 	{
+		/*
+		 * This exposes the fact that a channel is set as a klinechan.
+		 * While this isn't normally exposed, this only tells GCs,
+		 * and it's usually not very hard to tell anyway given that
+		 * joining the channel tends to inform you in a less courteous fashion.
+		 *
+		 * Besides, the alternative would be to let them claim the channel,
+		 * only to get klined; or to lift the klinechan status, allowing
+		 * whatever was meant to get klined to not get klined.
+		 */
+		if (metadata_find(mc, "private:close:closer") || metadata_find(mc, "private:klinechan:closer"))
+		{
+			command_fail(si, fault_noprivs, _("\2%s\2 is closed."), mc->name);
+			return;
+		}
+
 		chanacs_t *ca = chanacs_open(mc, entity(si->smu), NULL, true, entity(si->smu));
 		if ((ca->level & founder_flags) == founder_flags)
 		{

@@ -42,7 +42,7 @@ static void cmd_channel(sourceinfo_t *si, int parc, char *parv[])
 			command_fail(si, fault, STR_INVALID_PARAMS, "CHANNEL");
 		else
 			command_fail(si, fault, STR_INSUFFICIENT_PARAMS, "CHANNEL");
-		command_fail(si, fault, _("Syntax: PROJECT CHANNEL <project> ADD|DEL <#namespace>"));
+		command_fail(si, fault, _("Syntax: CHANNEL <project> ADD|DEL <#namespace>"));
 		return;
 	}
 

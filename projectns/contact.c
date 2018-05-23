@@ -41,7 +41,7 @@ static void cmd_contact(sourceinfo_t *si, int parc, char *parv[])
 			command_fail(si, fault, STR_INVALID_PARAMS, "CONTACT");
 		else
 			command_fail(si, fault, STR_INSUFFICIENT_PARAMS, "CONTACT");
-		command_fail(si, fault, _("Syntax: PROJECT CONTACT <project> ADD|DEL <account>"));
+		command_fail(si, fault, _("Syntax: CONTACT <project> ADD|DEL <account>"));
 		return;
 	}
 

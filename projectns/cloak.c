@@ -42,7 +42,7 @@ static void cmd_cloak(sourceinfo_t *si, int parc, char *parv[])
 			command_fail(si, fault, STR_INVALID_PARAMS, "CLOAK");
 		else
 			command_fail(si, fault, STR_INSUFFICIENT_PARAMS, "CLOAK");
-		command_fail(si, fault, _("Syntax: PROJECT CLOAK <project> ADD|DEL <namespace>"));
+		command_fail(si, fault, _("Syntax: CLOAK <project> ADD|DEL <namespace>"));
 		return;
 	}
 

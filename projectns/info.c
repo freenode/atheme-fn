@@ -20,7 +20,7 @@ static void cmd_info(sourceinfo_t *si, int parc, char *parv[])
 	if (!name)
 	{
 		command_fail(si, fault_needmoreparams, STR_INSUFFICIENT_PARAMS, "INFO");
-		command_fail(si, fault_needmoreparams, _("Syntax: PROJECT INFO <project>"));
+		command_fail(si, fault_needmoreparams, _("Syntax: INFO <project>"));
 		return;
 	}
 

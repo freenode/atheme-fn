@@ -20,7 +20,7 @@ static void cmd_list(sourceinfo_t *si, int parc, char *parv[])
 	if (!pattern)
 	{
 		command_fail(si, fault_needmoreparams, STR_INSUFFICIENT_PARAMS, "LIST");
-		command_fail(si, fault_needmoreparams, _("Syntax: PROJECT LIST <pattern>"));
+		command_fail(si, fault_needmoreparams, _("Syntax: LIST <pattern>"));
 		return;
 	}
 

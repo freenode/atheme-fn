@@ -58,7 +58,7 @@ static void cmd_drop(sourceinfo_t *si, int parc, char *parv[])
 	if (!name)
 	{
 		command_fail(si, fault_needmoreparams, STR_INSUFFICIENT_PARAMS, "DROP");
-		command_fail(si, fault_needmoreparams, _("Syntax: PROJECT DROP <project>"));
+		command_fail(si, fault_needmoreparams, _("Syntax: DROP <project>"));
 		return;
 	}
 

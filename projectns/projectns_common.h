@@ -17,7 +17,7 @@
 // Arbitrary number that should avoid truncation even with various protocol overhead
 #define PROJECTNAMELEN CHANNELLEN
 
-#define PROJECTNS_ABIREV 4U
+#define PROJECTNS_ABIREV 5U
 
 #define PROJECTNS_MINVER_CLOAKNS 4U
 
@@ -41,11 +41,7 @@ struct projectns {
 
 struct projectsvs_conf {
 	char *namespace_separators;
-#if 0
-	bool register_require_namespace;
-	char *register_require_namespace_exempt;
-	char *register_project_advice;
-#endif
+	bool default_open_registration;
 };
 
 struct projectsvs {

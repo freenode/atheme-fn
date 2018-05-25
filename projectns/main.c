@@ -48,6 +48,7 @@ struct projectns *project_new(const char * const name)
 {
 	struct projectns *p = smalloc(sizeof(*p));
 	p->name = sstrdup(name);
+	p->any_may_register = projectsvs.config.default_open_registration;
 
 	return p;
 }
@@ -454,6 +455,7 @@ static void mod_init(module_t *const restrict m)
 	}
 
 	add_dupstr_conf_item("NAMESPACE_SEPARATORS", &projectsvs.me->conf_table, 0, &projectsvs.config.namespace_separators, "-");
+	add_bool_conf_item("DEFAULT_OPEN_REGISTRATION", &projectsvs.me->conf_table, 0, &projectsvs.config.default_open_registration, false);
 
 	db_register_type_handler(DB_TYPE_PROJECT, db_h_project);
 	db_register_type_handler(DB_TYPE_MARK, db_h_mark);
@@ -510,6 +512,7 @@ static void mod_deinit(const module_unload_intent_t intent)
 	}
 
 	del_conf_item("NAMESPACE_SEPARATORS", &projectsvs.me->conf_table);
+	del_conf_item("DEFAULT_OPEN_REGISTRATION", &projectsvs.me->conf_table);
 
 	db_unregister_type_handler(DB_TYPE_PROJECT);
 	db_unregister_type_handler(DB_TYPE_MARK);

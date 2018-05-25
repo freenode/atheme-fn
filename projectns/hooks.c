@@ -25,32 +25,48 @@ static void userinfo_hook(hook_user_req_t *hdata)
 			struct projectns *project = n->data;
 
 			mowgli_node_t *n2;
-			char chan_buf[BUFSIZE] = "";
-			char cloak_buf[BUFSIZE] = "";
+			char buf[BUFSIZE] = "";
+			bool need_separator = false;
 			MOWGLI_ITER_FOREACH(n2, project->channel_ns.head)
 			{
-				if (chan_buf[0])
-					mowgli_strlcat(chan_buf, ", ", sizeof chan_buf);
-				mowgli_strlcat(chan_buf, (const char*)n2->data, sizeof chan_buf);
+				if (strlen(buf) > 80)
+				{
+					command_success_nodata(hdata->si, _("Group contact for %s (%s)"), project->name, buf);
+					buf[0] = '\0';
+				}
+				need_separator = true;
+				if (buf[0])
+					mowgli_strlcat(buf, ", ", sizeof buf);
+				mowgli_strlcat(buf, (const char*)n2->data, sizeof buf);
 			}
 			MOWGLI_ITER_FOREACH(n2, project->cloak_ns.head)
 			{
-				if (cloak_buf[0])
-					mowgli_strlcat(cloak_buf, ", ", sizeof cloak_buf);
+				if (strlen(buf) > 80)
+				{
+					command_success_nodata(hdata->si, _("Group contact for %s (%s)"), project->name, buf);
+					buf[0] = '\0';
+					need_separator = false;
+				}
+				if (buf[0])
+				{
+					if (need_separator)
+					{
+						mowgli_strlcat(buf, "; ", sizeof buf);
+						need_separator = false;
+					}
+					else
+					{
+						mowgli_strlcat(buf, ", ", sizeof buf);
+					}
+				}
 
 				char ns[BUFSIZE];
 				snprintf(ns, sizeof ns, "%s/*", (const char*)n2->data);
-				mowgli_strlcat(cloak_buf, ns, sizeof cloak_buf);
+				mowgli_strlcat(buf, ns, sizeof buf);
 			}
 
-			char full_buf[BUFSIZE] = "";
-			mowgli_strlcat(full_buf, chan_buf, sizeof full_buf);
-			if (full_buf[0] && cloak_buf[0])
-				mowgli_strlcat(full_buf, "; ", sizeof full_buf);
-			mowgli_strlcat(full_buf, cloak_buf, sizeof full_buf);
-
-			if (full_buf[0])
-				command_success_nodata(hdata->si, _("Group contact for %s (%s)"), project->name, full_buf);
+			if (buf[0])
+				command_success_nodata(hdata->si, _("Group contact for %s (%s)"), project->name, buf);
 			else
 				command_success_nodata(hdata->si, _("Group contact for %s"), project->name);
 		}

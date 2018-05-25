@@ -46,25 +46,30 @@ static void cmd_cloak(sourceinfo_t *si, int parc, char *parv[])
 		return;
 	}
 
-	if (strlen(namespace) >= HOSTLEN)
+	// Only check for new namespaces, in case we have bad entries from a previous configuration
+	// as we wouldn't be able to delete them otherwise
+	if (add_or_del == CLOAKNS_ADD)
 	{
-		command_fail(si, fault_badparams, _("The provided cloak namespace is too long."));
-		return;
-	}
-
-	const char *last_slash = strrchr(namespace, '/');
-	if ((last_slash != NULL && !*(last_slash + 1)) || strchr(namespace, '*'))
-	{
-		command_fail(si, fault_badparams, _("Please specify only the base part of the cloak namespace."));
-		return;
-	}
-
-	for (char *c = namespace; *c; c++)
-	{
-		if (!isprint(*c))
+		if (strlen(namespace) >= HOSTLEN)
 		{
-			command_fail(si, fault_badparams, _("The provided cloak namespace contains invalid characters."));
+			command_fail(si, fault_badparams, _("The provided cloak namespace is too long."));
 			return;
+		}
+
+		const char *last_slash = strrchr(namespace, '/');
+		if ((last_slash != NULL && !*(last_slash + 1)) || strchr(namespace, '*'))
+		{
+			command_fail(si, fault_badparams, _("Please specify only the base part of the cloak namespace."));
+			return;
+		}
+
+		for (char *c = namespace; *c; c++)
+		{
+			if (!isprint(*c))
+			{
+				command_fail(si, fault_badparams, _("The provided cloak namespace contains invalid characters."));
+				return;
+			}
 		}
 	}
 

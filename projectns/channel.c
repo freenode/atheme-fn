@@ -46,23 +46,38 @@ static void cmd_channel(sourceinfo_t *si, int parc, char *parv[])
 		return;
 	}
 
-	if (namespace[0] != '#' || strlen(namespace) >= CHANNELLEN)
+	// Only check for new namespaces, in case we have bad entries from a previous configuration
+	// as we wouldn't be able to delete them otherwise
+	if (add_or_del == CHANNS_ADD)
 	{
-		command_fail(si, fault_badparams, _("\2%s\2 is not a valid channel name."), namespace);
-		return;
-	}
+		for (char *c = namespace; *c; c++)
+		{
+			if (!isprint(*c))
+			{
+				// Don't echo it back, since non-printables might mess with the output
+				command_fail(si, fault_badparams, _("The provided channel name contains invalid characters."));
+				return;
+			}
+		}
 
-	char *canon_ns = projectsvs->parse_namespace(namespace);
+		if (namespace[0] != '#' || strlen(namespace) >= CHANNELLEN)
+		{
+			command_fail(si, fault_badparams, _("\2%s\2 is not a valid channel name."), namespace);
+			return;
+		}
 
-	if (irccasecmp(canon_ns, namespace) != 0)
-	{
-		command_fail(si, fault_badparams, _("\2%s\2 is not a namespace root; use \2%s\2 instead."), namespace, canon_ns);
-		free(canon_ns);
-		return;
-	}
-	else
-	{
-		free(canon_ns);
+		char *canon_ns = projectsvs->parse_namespace(namespace);
+
+		if (irccasecmp(canon_ns, namespace) != 0)
+		{
+			command_fail(si, fault_badparams, _("\2%s\2 is not a namespace root; use \2%s\2 instead."), namespace, canon_ns);
+			free(canon_ns);
+			return;
+		}
+		else
+		{
+			free(canon_ns);
+		}
 	}
 
 	struct projectns *p = mowgli_patricia_retrieve(projectsvs->projects, project);

@@ -167,8 +167,17 @@ bool is_valid_project_name(const char * const name)
 	/* Screen for anything that'd break parameter parsing or the protocol.
 	 * Don't check for other kinds of stupidity as this module is meant to
 	 * be used by network staff, who should know better. *grumble*
+	 * Addendum: also screen for nonprintables to avoid invisible characters
+	 * in project names
 	 */
-	return !(strchr(name, ' ') || strchr(name, '\n') || strchr(name, '\r') || strlen(name) >= PROJECTNAMELEN);
+	for (const char *c = name; *c; c++)
+	{
+		if (!isprint(*c) || *c == ' ' || *c == '\n' || *c == 'r')
+		{
+			return false;
+		}
+	}
+	return !(strlen(name) >= PROJECTNAMELEN);
 }
 
 mowgli_list_t *entity_get_projects(myentity_t *mt)

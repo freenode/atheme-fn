@@ -173,7 +173,7 @@ bool is_valid_project_name(const char * const name)
 	 */
 	for (const char *c = name; *c; c++)
 	{
-		if (!isprint(*c) || *c == ' ' || *c == '\n' || *c == 'r')
+		if (!isprint(*c) || *c == ' ' || *c == '\n' || *c == '\r')
 		{
 			return false;
 		}

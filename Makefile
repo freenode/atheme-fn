@@ -91,6 +91,7 @@ depend:
 
 clean:
 	${RM} -f *.so
+	${RM} -f projectns/*.so
 
 distclean: clean
 	${RM} -f Makefile version.c.last

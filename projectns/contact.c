@@ -17,7 +17,7 @@ static void cmd_contact(sourceinfo_t *si, int parc, char *parv[])
 {
 	char *project   = parv[0];
 	char *mode      = parv[1];
-	char *accname   = parv[2];
+	char *target    = parv[2];
 
 	enum {
 		CONTACT_BAD = 0,
@@ -33,9 +33,9 @@ static void cmd_contact(sourceinfo_t *si, int parc, char *parv[])
 			add_or_del = CONTACT_DEL;
 	}
 
-	if (!accname || !add_or_del)
+	if (!target || !add_or_del)
 	{
-		cmd_faultcode_t fault = (accname ? fault_badparams : fault_needmoreparams);
+		cmd_faultcode_t fault = (target ? fault_badparams : fault_needmoreparams);
 
 		if (fault == fault_badparams)
 			command_fail(si, fault, STR_INVALID_PARAMS, "CONTACT");
@@ -55,11 +55,11 @@ static void cmd_contact(sourceinfo_t *si, int parc, char *parv[])
 	 * If you're looking to change this, make sure to check for allow_foundership
 	 * since "can't be a channel founder" should catch the more obviously stupid things.
 	 */
-	myuser_t *mu = myuser_find(accname);
+	myuser_t *mu = myuser_find_ext(target);
 
 	if (!mu)
 	{
-		command_fail(si, fault_nosuch_target, _("\2%s\2 is not registered."), accname);
+		command_fail(si, fault_nosuch_target, _("\2%s\2 is not registered."), target);
 		return;
 	}
 

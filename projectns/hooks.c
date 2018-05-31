@@ -80,8 +80,6 @@ static void chaninfo_hook(hook_channel_req_t *hdata)
 
 	if (p)
 		command_success_nodata(hdata->si, "The \2%s\2 namespace is registered to the \2%s\2 project", namespace, p->name);
-	else
-		command_success_nodata(hdata->si, "The \2%s\2 namespace is not registered to any project", namespace);
 
 	free(namespace);
 }

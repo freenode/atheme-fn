@@ -13,8 +13,10 @@ static void cmd_set(sourceinfo_t *si, int parc, char *parv[]);
 static void help_set(sourceinfo_t *si, const char *subcmd);
 static void set_openreg(sourceinfo_t *si, int parc, char *parv[]);
 static void set_reginfo(sourceinfo_t *si, int parc, char *parv[]);
+static void set_name(sourceinfo_t *si, int parc, char *parv[]);
 
 command_t ps_set = { "SET", N_("Manipulates basic project settings."), PRIV_PROJECT_ADMIN, 3, cmd_set, { .func = help_set } };
+command_t ps_set_name = { "NAME", N_("Changes the name used to identify the project."), PRIV_PROJECT_ADMIN, 2, set_name, { .path = "freenode/project_set_name" } };
 command_t ps_set_openreg = { "OPENREG", N_("Allow non-contacts to register channels."), PRIV_PROJECT_ADMIN, 2, set_openreg, { .path = "freenode/project_set_openreg" } };
 command_t ps_set_reginfo = { "REGINFO", N_("Public information about the project namespace."), PRIV_PROJECT_ADMIN, 2, set_reginfo, { .path = "freenode/project_set_reginfo" } };
 
@@ -146,6 +148,53 @@ static void set_reginfo(sourceinfo_t *si, int parc, char *parv[])
 	}
 }
 
+static void set_name(sourceinfo_t *si, int parc, char *parv[])
+{
+	char *target = parv[0];
+	char *newname = parv[1];
+
+	if (!newname)
+	{
+		command_fail(si, fault_needmoreparams, STR_INSUFFICIENT_PARAMS, "SET NAME");
+		command_fail(si, fault_needmoreparams, _("Syntax: SET <project> NAME <new>"));
+		return;
+	}
+
+	struct projectns *p = mowgli_patricia_retrieve(projectsvs->projects, target);
+	if (!p)
+	{
+		command_fail(si, fault_nosuch_target, _("The project \2%s\2 does not exist."), target);
+		return;
+	}
+
+	char *oldname = p->name;
+
+	if (!projectsvs->is_valid_project_name(newname))
+	{
+		command_fail(si, fault_badparams, _("\2%s\2 is not a valid project name."), newname);
+		return;
+	}
+
+	if (strcmp(oldname, newname) == 0)
+	{
+		command_fail(si, fault_nochange, _("The project name is already set to \2%s\2."), newname);
+		return;
+	}
+
+	if (mowgli_patricia_retrieve(projectsvs->projects, newname))
+	{
+		command_fail(si, fault_alreadyexists, _("A project named \2%s\2 already exists. Please choose a different name."), newname);
+		return;
+	}
+
+	p->name = sstrdup(newname);
+
+	logcommand(si, CMDLOG_ADMIN, "PROJECT:SET:NAME: \2%s\2 to \2%s\2", oldname, newname);
+	command_success_nodata(si, _("The \2%s\2 project has been renamed to \2%s\2."), oldname, newname);
+
+	free(oldname);
+}
+
 static void mod_init(module_t *const restrict m)
 {
 	if (!use_projectns_main_symbols(m))
@@ -154,6 +203,7 @@ static void mod_init(module_t *const restrict m)
 	set_cmdtree = mowgli_patricia_create(strcasecanon);
 	command_add(&ps_set_openreg, set_cmdtree);
 	command_add(&ps_set_reginfo, set_cmdtree);
+	command_add(&ps_set_name, set_cmdtree);
 }
 
 static void mod_deinit(const module_unload_intent_t unused)
@@ -161,6 +211,7 @@ static void mod_deinit(const module_unload_intent_t unused)
 	service_named_unbind_command("projectserv", &ps_set);
 	command_delete(&ps_set_openreg, set_cmdtree);
 	command_delete(&ps_set_reginfo, set_cmdtree);
+	command_delete(&ps_set_name, set_cmdtree);
 }
 
 DECLARE_MODULE_V1

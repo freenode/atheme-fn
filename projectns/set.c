@@ -189,6 +189,10 @@ static void set_name(sourceinfo_t *si, int parc, char *parv[])
 
 	p->name = sstrdup(newname);
 
+	// must be in this order or this will break if only casing is changed
+	mowgli_patricia_delete(projectsvs->projects, oldname);
+	mowgli_patricia_add(projectsvs->projects, newname, p);
+
 	logcommand(si, CMDLOG_ADMIN, "PROJECT:SET:NAME: \2%s\2 to \2%s\2", oldname, newname);
 	command_success_nodata(si, _("The \2%s\2 project has been renamed to \2%s\2."), oldname, newname);
 

@@ -75,8 +75,8 @@ static void userinfo_hook(hook_user_req_t *hdata)
 
 static void chaninfo_hook(hook_channel_req_t *hdata)
 {
-	char *namespace = projectsvs->parse_namespace(hdata->mc->name);
-	struct projectns *p = mowgli_patricia_retrieve(projectsvs->projects_by_channelns, namespace);
+	char *namespace = NULL;
+	struct projectns *p = projectsvs->channame_get_project(hdata->mc->name, &namespace);
 
 	if (p)
 		command_success_nodata(hdata->si, "The \2%s\2 namespace is registered to the \2%s\2 project", namespace, p->name);
@@ -86,13 +86,13 @@ static void chaninfo_hook(hook_channel_req_t *hdata)
 
 static void try_register_hook(hook_channel_register_check_t *hdata)
 {
-	char *namespace = projectsvs->parse_namespace(hdata->name);
-	struct projectns *project = mowgli_patricia_retrieve(projectsvs->projects_by_channelns, namespace);
+	char *namespace = NULL;
+	struct projectns *project = projectsvs->channame_get_project(hdata->name, &namespace);
 
 	if (register_require_namespace && !project && match(register_require_namespace_exempt, hdata->name))
 	{
 		hdata->approved = 1;
-		command_fail(hdata->si, fault_noprivs, _("The \2%s\2 namespace is not registered to any project, so you cannot use it."), namespace);
+		command_fail(hdata->si, fault_noprivs, _("The given channel name is not registered to any project, so you cannot use it."));
 		if (register_project_advice)
 			command_fail(hdata->si, fault_noprivs, "%s", register_project_advice);
 	}
@@ -123,8 +123,8 @@ static void try_register_hook(hook_channel_register_check_t *hdata)
 
 static void did_register_hook(hook_channel_req_t *hdata)
 {
-	char *namespace = projectsvs->parse_namespace(hdata->mc->name);
-	struct projectns *project = mowgli_patricia_retrieve(projectsvs->projects_by_channelns, namespace);
+	char *namespace = NULL;
+	struct projectns *project = projectsvs->channame_get_project(hdata->mc->name, &namespace);
 
 	if (project)
 	{

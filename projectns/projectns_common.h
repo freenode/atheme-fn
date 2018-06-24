@@ -17,7 +17,7 @@
 // Arbitrary number that should avoid truncation even with various protocol overhead
 #define PROJECTNAMELEN CHANNELLEN
 
-#define PROJECTNS_ABIREV 5U
+#define PROJECTNS_ABIREV 6U
 
 #define PROJECTNS_MINVER_CLOAKNS 4U
 
@@ -52,9 +52,9 @@ struct projectsvs {
 	struct projectns *(*project_new)(const char *name);
 	void (*project_destroy)(struct projectns *p);
 	void (*show_marks)(sourceinfo_t *si, struct projectns *p);
-	char *(*parse_namespace)(const char *chan);
 	bool (*is_valid_project_name)(const char *name);
 	mowgli_list_t *(*entity_get_projects)(myentity_t *mt);
+	struct projectns *(*channame_get_project)(const char *name, char **out_namespace);
 };
 
 #endif

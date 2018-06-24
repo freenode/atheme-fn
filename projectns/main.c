@@ -20,9 +20,9 @@
 
 unsigned int projectns_abirev = PROJECTNS_ABIREV;
 
-char *parse_namespace(const char *chan);
 bool is_valid_project_name(const char * const name);
 mowgli_list_t *entity_get_projects(myentity_t *mt);
+struct projectns *channame_get_project(const char * const name, char ** out_namespace);
 struct projectns *project_new(const char * const name);
 void project_destroy(struct projectns * const p);
 void show_marks(sourceinfo_t *si, struct projectns * const p);
@@ -32,9 +32,9 @@ struct projectsvs projectsvs = {
 	.project_new = project_new,
 	.project_destroy = project_destroy,
 	.show_marks = show_marks,
-	.parse_namespace = parse_namespace,
 	.is_valid_project_name = is_valid_project_name,
 	.entity_get_projects = entity_get_projects,
+	.channame_get_project = channame_get_project,
 };
 
 struct projectns_main_persist {
@@ -154,15 +154,6 @@ void show_marks(sourceinfo_t *si, struct projectns *p)
 	}
 }
 
-/* You need to free() the return value of this when done */
-char *parse_namespace(const char *chan)
-{
-	char *buf = sstrdup(chan);
-	(void) strtok(buf, projectsvs.config.namespace_separators);
-
-	return buf;
-}
-
 bool is_valid_project_name(const char * const name)
 {
 	/* Screen for anything that'd break parameter parsing or the protocol.
@@ -179,6 +170,49 @@ bool is_valid_project_name(const char * const name)
 		}
 	}
 	return !(strlen(name) >= PROJECTNAMELEN);
+}
+
+// Remove the last -suffix from a channel name by replacing the separator with a NUL.
+// Returns false if there was no -suffix to remove.
+static bool trim_last_component(char *chan)
+{
+	for (size_t i = strlen(chan) - 1; i > 0; i--)
+	{
+		if (strchr(projectsvs.config.namespace_separators, chan[i]))
+		{
+			chan[i] = '\0';
+			return true;
+		}
+	}
+
+	return false;
+}
+
+// Looks up a project by channel name.
+// If out_namespace is a non-NULL pointer to char*, it will be set to point
+// at a buffer containing the channel namespace that was matched, and the caller
+// will have to free() it later.
+//
+// If no project is found, NULL is returned and out_namespace is left untouched.
+// Callers that wish to free *out_namespace either way may set it to NULL beforehand.
+struct projectns *channame_get_project(const char * const name, char **out_namespace)
+{
+	char *buf = sstrdup(name);
+
+	struct projectns *p = NULL;
+
+	do {
+		p = mowgli_patricia_retrieve(projectsvs.projects_by_channelns, buf);
+		if (p)
+			break;
+	} while (trim_last_component(buf));
+
+	if (out_namespace && p)
+		*out_namespace = buf;
+	else
+		free(buf);
+
+	return p;
 }
 
 mowgli_list_t *entity_get_projects(myentity_t *mt)

@@ -24,8 +24,8 @@ static void cmd_claim(sourceinfo_t *si, int parc, char *parv[])
 		return;
 	}
 
-	char *namespace = projectsvs->parse_namespace(name);
-	struct projectns *p = mowgli_patricia_retrieve(projectsvs->projects_by_channelns, namespace);
+	char *namespace = NULL;
+	struct projectns *p = projectsvs->channame_get_project(name, &namespace);
 
 	if (!p)
 	{

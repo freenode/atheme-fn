@@ -65,19 +65,6 @@ static void cmd_channel(sourceinfo_t *si, int parc, char *parv[])
 			command_fail(si, fault_badparams, _("\2%s\2 is not a valid channel name."), namespace);
 			return;
 		}
-
-		char *canon_ns = projectsvs->parse_namespace(namespace);
-
-		if (irccasecmp(canon_ns, namespace) != 0)
-		{
-			command_fail(si, fault_badparams, _("\2%s\2 is not a namespace root; use \2%s\2 instead."), namespace, canon_ns);
-			free(canon_ns);
-			return;
-		}
-		else
-		{
-			free(canon_ns);
-		}
 	}
 
 	struct projectns *p = mowgli_patricia_retrieve(projectsvs->projects, project);

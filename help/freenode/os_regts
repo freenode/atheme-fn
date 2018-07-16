@@ -1,0 +1,18 @@
+Help for REGTS:
+
+The REGTS command adjusts the registration timestamp on an
+existing registration at runtime.
+
+The timestamp is given as a UNIX timestamp in seconds since
+the epoch.
+
+Nickname registrations are automatically adjusted to be no
+older than their owning account registration if the latter
+is changed.
+
+Syntax: REGTS <USER|NICK|CHANNEL> <target> <timestamp>
+
+Examples:
+    /msg &nick& REGTS USER foo 1319240631
+    /msg &nick& REGTS NICK foo-test 1400000000
+    /msg &nick& REGTS CHANNEL #help 759808142

@@ -31,11 +31,12 @@ LDFLAGS		+=  -Wl,-export-dynamic
 default: all
 
 SRCS = \
-        log_sasl_fail.c \
+	log_sasl_fail.c \
 	cs_access.c		\
 	cs_successor_freenodestaff.c \
 	regnotice.c \
 	noemailnotice.c \
+	os_regts.c \
 	projectns/main.c \
 	projectns/help.c \
 	projectns/info.c \

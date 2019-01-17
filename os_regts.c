@@ -6,7 +6,6 @@
  */
 
 #include "atheme.h"
-#include "projectns/tmp.h"
 
 static void os_cmd_regts(sourceinfo_t *si, int parc, char *parv[]);
 

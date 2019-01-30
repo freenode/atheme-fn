@@ -37,7 +37,6 @@ SRCS = \
 	regnotice.c \
 	noemailnotice.c \
 	os_regts.c \
-	projectns/main.c \
 	projectns/help.c \
 	projectns/info.c \
 	projectns/list.c \
@@ -52,7 +51,15 @@ SRCS = \
 
 # To compile your own modules, add them to SRCS or make blegh.so
 
-OBJS = ${SRCS:.c=.so}
+PROJECTNS_MAIN_SRCS = \
+	projectns/main/config.c \
+	projectns/main/db.c \
+	projectns/main/main.c \
+	projectns/main/objects.c \
+	projectns/main/persist.c \
+	projectns/main/util.c
+
+OBJS = ${SRCS:.c=.so} projectns/main.so
 OTHER = fn-rotatelogs fn-sendemail
 
 all: ${OBJS} ${OTHER}
@@ -81,6 +88,9 @@ install:
 
 .c.so:
 	${CC} ${PICFLAGS} ${CPPFLAGS} ${CFLAGS} $< -o $@
+
+projectns/main.so: ${PROJECTNS_MAIN_SRCS}
+	${CC} ${PICFLAGS} ${CPPFLAGS} ${CFLAGS} $^ -o $@
 
 fn-rotatelogs: fn-rotatelogs.in
 	sed -e 's!@prefix@!${prefix}!g' fn-rotatelogs.in > fn-rotatelogs

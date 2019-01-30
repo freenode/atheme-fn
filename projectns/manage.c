@@ -32,7 +32,7 @@ static void cmd_register(sourceinfo_t *si, int parc, char *parv[])
 		return;
 	}
 
-	if (mowgli_patricia_retrieve(projectsvs->projects, name))
+	if (projectsvs->project_find(name))
 	{
 		command_fail(si, fault_alreadyexists, _("\2%s\2 is already registered."), name);
 		return;
@@ -44,8 +44,7 @@ static void cmd_register(sourceinfo_t *si, int parc, char *parv[])
 		return;
 	}
 
-	struct projectns *p = projectsvs->project_new(name);
-	mowgli_patricia_add(projectsvs->projects, p->name, p);
+	projectsvs->project_new(name);
 
 	logcommand(si, CMDLOG_ADMIN, "PROJECT:REGISTER: \2%s\2", name);
 	command_success_nodata(si, _("The project \2%s\2 has been registered."), name);
@@ -62,7 +61,7 @@ static void cmd_drop(sourceinfo_t *si, int parc, char *parv[])
 		return;
 	}
 
-	struct projectns *p = mowgli_patricia_retrieve(projectsvs->projects, name);
+	struct projectns *p = projectsvs->project_find(name);
 	if(!p)
 	{
 		command_fail(si, fault_nosuch_target, _("The project \2%s\2 does not exist."), name);

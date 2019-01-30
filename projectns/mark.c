@@ -51,7 +51,7 @@ static void cmd_mark(sourceinfo_t *si, int parc, char *parv[])
 		return;
 	}
 
-	struct projectns *p = mowgli_patricia_retrieve(projectsvs->projects, project);
+	struct projectns *p = projectsvs->project_find(project);
 
 	if (!p)
 	{

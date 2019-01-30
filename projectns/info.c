@@ -24,7 +24,7 @@ static void cmd_info(sourceinfo_t *si, int parc, char *parv[])
 		return;
 	}
 
-	struct projectns *p = mowgli_patricia_retrieve(projectsvs->projects, name);
+	struct projectns *p = projectsvs->project_find(name);
 	if(!p)
 	{
 		command_fail(si, fault_nosuch_target, _("The project \2%s\2 does not exist."), name);

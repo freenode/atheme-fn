@@ -63,7 +63,7 @@ static void cmd_contact(sourceinfo_t *si, int parc, char *parv[])
 		return;
 	}
 
-	struct projectns *p = mowgli_patricia_retrieve(projectsvs->projects, project);
+	struct projectns *p = projectsvs->project_find(project);
 
 	if (!p)
 	{
@@ -73,52 +73,19 @@ static void cmd_contact(sourceinfo_t *si, int parc, char *parv[])
 
 	if (add_or_del == CONTACT_ADD)
 	{
-		mowgli_node_t *n, *tn;
-		MOWGLI_ITER_FOREACH(n, p->contacts.head)
+		if (projectsvs->contact_new(p, entity(mu)))
 		{
-			myentity_t *contact_mt = n->data;
-			if (contact_mt == entity(mu))
-			{
-				command_fail(si, fault_nochange, _("\2%s\2 is already listed as contact for project \2%s\2."), contact_mt->name, p->name);
-				return;
-			}
+			logcommand(si, CMDLOG_ADMIN, "PROJECT:CONTACT:ADD: \2%s\2 to \2%s\2", entity(mu)->name, p->name);
+			command_success_nodata(si, _("\2%s\2 was set as a contact for project \2%s\2."), entity(mu)->name, p->name);
 		}
-
-		mowgli_node_add(p, mowgli_node_create(), projectsvs->entity_get_projects(entity(mu)));
-		mowgli_node_add(entity(mu), mowgli_node_create(), &p->contacts);
-
-		logcommand(si, CMDLOG_ADMIN, "PROJECT:CONTACT:ADD: \2%s\2 to \2%s\2", entity(mu)->name, p->name);
-		command_success_nodata(si, _("\2%s\2 was set as a contact for project \2%s\2."), entity(mu)->name, p->name);
+		else
+		{
+			command_fail(si, fault_nochange, _("\2%s\2 is already listed as contact for project \2%s\2."), entity(mu)->name, p->name);
+		}
 	}
 	else // CONTACT_DEL
 	{
-		mowgli_list_t *l = projectsvs->entity_get_projects(entity(mu));
-		mowgli_node_t *n, *tn;
-
-		bool was_listed = false;
-
-		MOWGLI_ITER_FOREACH_SAFE(n, tn, l->head)
-		{
-			if (p == (struct projectns*)n->data)
-			{
-				mowgli_node_delete(n, l);
-				mowgli_node_free(n);
-				break;
-			}
-		}
-
-		MOWGLI_ITER_FOREACH_SAFE(n, tn, p->contacts.head)
-		{
-			if (entity(mu) == (myentity_t*)n->data)
-			{
-				mowgli_node_delete(n, &p->contacts);
-				mowgli_node_free(n);
-				was_listed = true;
-				break;
-			}
-		}
-
-		if (was_listed)
+		if (projectsvs->contact_destroy(p, entity(mu)))
 		{
 			logcommand(si, CMDLOG_ADMIN, "PROJECT:CONTACT:DEL: \2%s\2 from \2%s\2", entity(mu)->name, p->name);
 			command_success_nodata(si, _("\2%s\2 was removed as a contact for project \2%s\2."), entity(mu)->name, p->name);

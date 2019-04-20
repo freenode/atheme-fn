@@ -105,7 +105,7 @@ void show_marks(sourceinfo_t *si, struct projectns *p)
 		else
 			setter_name = m->setter_name;
 
-		if (strcasecmp(setter_name, m->setter_name))
+		if (irccasecmp(setter_name, m->setter_name))
 		{
 			command_success_nodata(
 					si,

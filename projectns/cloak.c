@@ -87,7 +87,7 @@ static void cmd_cloak(sourceinfo_t *si, int parc, char *parv[])
 		MOWGLI_ITER_FOREACH_SAFE(n, tn, p->cloak_ns.head)
 		{
 			const char *ns = n->data;
-			if (strcasecmp(ns, namespace) == 0)
+			if (irccasecmp(ns, namespace) == 0)
 			{
 				free(n->data);
 
@@ -107,7 +107,7 @@ static void cmd_cloak(sourceinfo_t *si, int parc, char *parv[])
 		MOWGLI_ITER_FOREACH(n, p->cloak_ns.head)
 		{
 			const char *ns = n->data;
-			if (strcasecmp(ns, namespace) == 0)
+			if (irccasecmp(ns, namespace) == 0)
 			{
 				command_fail(si, fault_nochange, _("The \2%s\2 namespace is already registered to project \2%s\2."), namespace, p->name);
 

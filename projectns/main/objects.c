@@ -152,7 +152,7 @@ void init_structures(void)
 {
 	projectsvs.projects = mowgli_patricia_create(strcasecanon);
 	projectsvs.projects_by_channelns = mowgli_patricia_create(irccasecanon);
-	projectsvs.projects_by_cloakns = mowgli_patricia_create(irccasecanon);
+	projectsvs.projects_by_cloakns = mowgli_patricia_create(strcasecanon);
 
 	hook_add_myuser_delete(userdelete_hook);
 }

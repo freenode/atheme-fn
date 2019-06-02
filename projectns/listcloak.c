@@ -28,8 +28,19 @@ static int cmd_listcloak_cb(const char *cloakns, void *data, void *privdata)
 
 	if (!match(st->pattern, cloakns))
 	{
-		st->matches++;
-		command_success_nodata(st->si, _("- %s (%s)"), cloakns, project->name);
+		// We have to find the actual entry as patricia tree keys are
+		// stored in case-normalized form
+		mowgli_node_t *n;
+		MOWGLI_ITER_FOREACH(n, project->cloak_ns.head)
+		{
+			const char * const actual_cloakns = n->data;
+			if (0 == strcasecmp(actual_cloakns, cloakns))
+			{
+				st->matches++;
+				command_success_nodata(st->si, _("- %s (%s)"), actual_cloakns, project->name);
+				break;
+			}
+		}
 	}
 
 	return 0; // unused by foreach

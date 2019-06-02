@@ -89,6 +89,7 @@ static void db_h_cloakns(database_handle_t *db, const char *type)
 
 	struct projectns *project = mowgli_patricia_retrieve(projectsvs.projects, project_name);
 
+	mowgli_patricia_add(projectsvs.projects_by_cloakns, namespace, project);
 	mowgli_node_add(sstrdup(namespace), mowgli_node_create(), &project->cloak_ns);
 }
 

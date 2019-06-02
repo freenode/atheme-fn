@@ -92,6 +92,8 @@ void project_destroy(struct projectns * const p)
 	MOWGLI_ITER_FOREACH_SAFE(n, tn, p->cloak_ns.head)
 	{
 		char *ns = n->data;
+		mowgli_patricia_delete(projectsvs.projects_by_cloakns, ns);
+
 		free(ns);
 
 		mowgli_node_delete(n, &p->cloak_ns);
@@ -150,6 +152,7 @@ void init_structures(void)
 {
 	projectsvs.projects = mowgli_patricia_create(strcasecanon);
 	projectsvs.projects_by_channelns = mowgli_patricia_create(irccasecanon);
+	projectsvs.projects_by_cloakns = mowgli_patricia_create(irccasecanon);
 
 	hook_add_myuser_delete(userdelete_hook);
 }
@@ -157,6 +160,7 @@ void init_structures(void)
 void deinit_aux_structures(void)
 {
 	mowgli_patricia_destroy(projectsvs.projects_by_channelns, NULL, NULL);
+	mowgli_patricia_destroy(projectsvs.projects_by_cloakns, NULL, NULL);
 
 	/* Clear entity->project mappings
 	 * These store lists of pointers, which will be replaced

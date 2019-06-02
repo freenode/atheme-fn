@@ -48,6 +48,7 @@ struct projectsvs {
 	service_t *me;
 	mowgli_patricia_t *projects;
 	mowgli_patricia_t *projects_by_channelns;
+	mowgli_patricia_t *projects_by_cloakns;
 	struct projectsvs_conf config;
 
 	struct projectns *(*project_new)(const char *name);

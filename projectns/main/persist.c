@@ -83,6 +83,11 @@ bool persist_load_data(module_t *m)
 			mowgli_patricia_add(projectsvs.projects_by_channelns, n->data, new);
 		}
 
+		MOWGLI_ITER_FOREACH(n, new->cloak_ns.head)
+		{
+			mowgli_patricia_add(projectsvs.projects_by_cloakns, n->data, new);
+		}
+
 		MOWGLI_ITER_FOREACH(n, new->contacts.head)
 		{
 			mowgli_node_add(new, mowgli_node_create(), entity_get_projects(n->data));

@@ -81,8 +81,28 @@ static void cmd_cloak(sourceinfo_t *si, int parc, char *parv[])
 		return;
 	}
 
+	struct projectns *cloak_p = mowgli_patricia_retrieve(projectsvs->projects_by_cloakns, namespace);
+	if (cloak_p && add_or_del == CLOAKNS_ADD)
+	{
+		command_fail(si, fault_alreadyexists, _("The \2%s\2 namespace already belongs to project \2%s\2."), namespace, cloak_p->name);
+		return;
+	}
+	if (!cloak_p && add_or_del == CLOAKNS_DEL)
+	{
+		command_fail(si, fault_nochange, _("The \2%s\2 namespace is not registered to any project."), namespace);
+		return;
+	}
+
 	if (add_or_del == CLOAKNS_DEL)
 	{
+		if (cloak_p != p)
+		{
+			command_fail(si, fault_nosuch_key, _("The \2%s\2 namespace is registered to project \2%s\2, but you tried to remove it from project \2%s\2."), namespace, p->name, cloak_p->name);
+			return;
+		}
+
+		mowgli_patricia_delete(projectsvs->projects_by_cloakns, namespace);
+
 		mowgli_node_t *n, *tn;
 		MOWGLI_ITER_FOREACH_SAFE(n, tn, p->cloak_ns.head)
 		{
@@ -103,18 +123,8 @@ static void cmd_cloak(sourceinfo_t *si, int parc, char *parv[])
 	}
 	else // CLOAKNS_ADD
 	{
-		mowgli_node_t *n;
-		MOWGLI_ITER_FOREACH(n, p->cloak_ns.head)
-		{
-			const char *ns = n->data;
-			if (irccasecmp(ns, namespace) == 0)
-			{
-				command_fail(si, fault_nochange, _("The \2%s\2 namespace is already registered to project \2%s\2."), namespace, p->name);
-
-				return;
-			}
-		}
-
+		/* We've checked above that this namespace isn't already registered */
+		mowgli_patricia_add(projectsvs->projects_by_cloakns, namespace, p);
 		mowgli_node_add(sstrdup(namespace), mowgli_node_create(), &p->cloak_ns);
 
 		logcommand(si, CMDLOG_ADMIN, "PROJECT:CLOAK:ADD: \2%s\2 to \2%s\2", namespace, p->name);

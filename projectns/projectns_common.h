@@ -17,7 +17,7 @@
 // Arbitrary number that should avoid truncation even with various protocol overhead
 #define PROJECTNAMELEN CHANNELLEN
 
-#define PROJECTNS_ABIREV 7U
+#define PROJECTNS_ABIREV 8U
 
 #define PROJECTNS_MINVER_CLOAKNS 4U
 

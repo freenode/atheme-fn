@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2018 Janik Kleinhoff
+ * Copyright (c) 2019 Eric Mertens
  * Rights to this code are as documented in doc/LICENSE.
  *
  * Services awareness of group registrations
@@ -48,7 +49,6 @@ static int cmd_listcloak_cb(const char *cloakns, void *data, void *privdata)
 
 static void cmd_listcloak(sourceinfo_t *si, int parc, char *parv[])
 {
-	(void)parc;
 	const char *pattern = parv[0];
 
 	if (!pattern)
@@ -85,7 +85,6 @@ static void mod_init(module_t *const restrict m)
 
 static void mod_deinit(const module_unload_intent_t unused)
 {
-	(void)unused;
 	service_named_unbind_command("projectserv", &ps_listcloak);
 }
 

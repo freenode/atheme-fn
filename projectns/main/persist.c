@@ -83,11 +83,6 @@ bool persist_load_data(module_t *m)
 			mowgli_patricia_add(projectsvs.projects_by_channelns, n->data, new);
 		}
 
-		MOWGLI_ITER_FOREACH(n, new->cloak_ns.head)
-		{
-			mowgli_patricia_add(projectsvs.projects_by_cloakns, n->data, new);
-		}
-
 		MOWGLI_ITER_FOREACH(n, new->contacts.head)
 		{
 			mowgli_node_add(new, mowgli_node_create(), entity_get_projects(n->data));
@@ -96,6 +91,11 @@ bool persist_load_data(module_t *m)
 		if (rec->version >= PROJECTNS_MINVER_CLOAKNS)
 		{
 			new->cloak_ns = old_p->cloak_ns;
+
+			MOWGLI_ITER_FOREACH(n, new->cloak_ns.head)
+			{
+				mowgli_patricia_add(projectsvs.projects_by_cloakns, n->data, new);
+			}
 		}
 
 		/* If you wish to restore anything else, it will not have been there

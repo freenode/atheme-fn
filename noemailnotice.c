@@ -6,6 +6,7 @@
  *
  */
 
+#include "fn-compat.h"
 #include "atheme.h"
 
 static void user_identify_notice(user_t *u);

@@ -6,6 +6,7 @@
  * Commands to set marks on projects
  */
 
+#include "fn-compat.h"
 #include "atheme.h"
 #include "projectns.h"
 

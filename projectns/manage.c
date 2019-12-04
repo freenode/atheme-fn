@@ -6,6 +6,7 @@
  * Commands to register and drop projects
  */
 
+#include "fn-compat.h"
 #include "atheme.h"
 #include "projectns.h"
 

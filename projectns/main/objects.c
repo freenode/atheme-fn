@@ -6,6 +6,7 @@
  * Core functionality - Data structure management
  */
 
+#include "fn-compat.h"
 #include "main.h"
 
 bool contact_new(struct projectns * const p, myentity_t * const mt)

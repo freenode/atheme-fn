@@ -6,6 +6,7 @@
  * if an account by that name exists.
  */
 
+#include "fn-compat.h"
 #include "atheme.h"
 
 static void channel_pick_successor_hook(hook_channel_succession_req_t *req)

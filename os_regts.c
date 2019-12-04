@@ -5,6 +5,7 @@
  * Allows network staff to manipulate registration timestamps.
  */
 
+#include "fn-compat.h"
 #include "atheme.h"
 
 static void os_cmd_regts(sourceinfo_t *si, int parc, char *parv[]);

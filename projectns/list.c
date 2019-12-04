@@ -6,6 +6,7 @@
  * Command to display information about registered projects
  */
 
+#include "fn-compat.h"
 #include "atheme.h"
 #include "projectns.h"
 

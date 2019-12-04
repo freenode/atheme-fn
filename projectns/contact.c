@@ -6,6 +6,7 @@
  * Commands to manage registered contacts
  */
 
+#include "fn-compat.h"
 #include "atheme.h"
 #include "projectns.h"
 

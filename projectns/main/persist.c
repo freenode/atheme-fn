@@ -6,6 +6,7 @@
  * Core functionality - Persistence when reloading
  */
 
+#include "fn-compat.h"
 #include "main.h"
 
 #define PERSIST_STORAGE_NAME "atheme.freenode.projectns.main.persist"
@@ -43,7 +44,7 @@ bool persist_load_data(module_t *m)
 		 * newer struct projectns that we won't know to free, plus data might be lost.
 		 * Best to play it safe.)
 		 */
-		m->mflags = MODTYPE_FAIL;
+		m->mflags = MODFLAG_FAIL;
 		return false;
 	}
 	slog(LG_DEBUG, "freenode/projectns/main: restoring pre-reload structures (old: %u; new: %u)", rec->version, PROJECTNS_ABIREV);

@@ -6,6 +6,7 @@
  * Commands to manipulate projects' settings
  */
 
+#include "fn-compat.h"
 #include "atheme.h"
 #include "projectns.h"
 

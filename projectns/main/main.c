@@ -6,6 +6,7 @@
  * Core functionality - Module declaration
  */
 
+#include "fn-compat.h"
 #include "main.h"
 
 unsigned int projectns_abirev = PROJECTNS_ABIREV;

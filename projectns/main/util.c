@@ -6,6 +6,7 @@
  * Core functionality - Utility functions
  */
 
+#include "fn-compat.h"
 #include "main.h"
 
 bool is_valid_project_name(const char * const name)

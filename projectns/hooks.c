@@ -6,6 +6,7 @@
  * Hooks into existing functionality
  */
 
+#include "fn-compat.h"
 #include "atheme.h"
 #include "projectns.h"
 

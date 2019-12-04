@@ -6,6 +6,7 @@
  * Commands to manage cloak namespaces
  */
 
+#include "fn-compat.h"
 #include "atheme.h"
 #include "projectns.h"
 

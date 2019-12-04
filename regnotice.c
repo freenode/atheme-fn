@@ -7,6 +7,7 @@
  * $Id: regnotice.c 69 2013-03-25 13:07:19Z stephen $
  */
 
+#include "fn-compat.h"
 #include "atheme.h"
 
 static void nick_reg_notice(void *vptr);

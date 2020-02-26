@@ -18,9 +18,10 @@
 // Arbitrary number that should avoid truncation even with various protocol overhead
 #define PROJECTNAMELEN CHANNELLEN
 
-#define PROJECTNS_ABIREV 8U
+#define PROJECTNS_ABIREV 9U
 
 #define PROJECTNS_MINVER_CLOAKNS 4U
+#define PROJECTNS_MINVER_CREATION_MD 9U
 
 struct project_mark {
 	time_t time;
@@ -38,6 +39,8 @@ struct projectns {
 	mowgli_list_t channel_ns;
 	mowgli_list_t marks;
 	mowgli_list_t cloak_ns;
+	time_t creation_time;
+	stringref creator;
 };
 
 struct projectsvs_conf {

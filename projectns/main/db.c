@@ -27,6 +27,18 @@ static void db_h_project(database_handle_t *db, const char *type)
 	l->any_may_register = any_reg;
 
 	mowgli_patricia_add(projectsvs.projects, l->name, l);
+
+	time_t regts;
+	if (db_read_time(db, &regts))
+		l->creation_time = regts;
+	else
+		return;
+
+	const char *creator = db_read_word(db);
+	if (creator && strcmp(creator, "*") != 0)
+		l->creator = strshare_get(creator);
+	else
+		return;
 }
 
 static void db_h_reginfo(database_handle_t *db, const char *type)
@@ -105,6 +117,8 @@ static void write_projects_db(database_handle_t *db)
 		db_start_row(db, DB_TYPE_PROJECT);
 		db_write_word(db, project->name);
 		db_write_uint(db, project->any_may_register);
+		db_write_time(db, project->creation_time);
+		db_write_word(db, project->creator);
 		db_commit_row(db);
 
 		if (project->reginfo)

@@ -36,6 +36,22 @@ static void cmd_info(sourceinfo_t *si, int parc, char *parv[])
 	command_success_nodata(si, _("Information on \2%s\2:"), p->name);
 
 	char buf[BUFSIZE] = "";
+
+	if (p->creation_time)
+	{
+		struct tm *tm = localtime(&p->creation_time);
+		strftime(buf, sizeof buf, TIME_FORMAT, tm);
+	}
+
+	if (p->creation_time && p->creator)
+		command_success_nodata(si, _("Registered on %s by %s"), buf, p->creator);
+	else if (p->creation_time)
+		command_success_nodata(si, _("Registered on %s"), buf);
+	else if (p->creator)
+		command_success_nodata(si, _("Registered by %s"), p->creator);
+
+	buf[0] = '\0';
+
 	mowgli_node_t *n;
 	MOWGLI_ITER_FOREACH(n, p->channel_ns.head)
 	{

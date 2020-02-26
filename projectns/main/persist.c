@@ -99,6 +99,12 @@ bool persist_load_data(module_t *m)
 			}
 		}
 
+		if (rec->version >= PROJECTNS_MINVER_CREATION_MD)
+		{
+			new->creator       = old_p->creator;
+			new->creation_time = old_p->creation_time;
+		}
+
 		/* If you wish to restore anything else, it will not have been there
 		 * in past versions, so you *must* check rec->version to see whether
 		 * the data is present or you *will* cause a crash or worse.

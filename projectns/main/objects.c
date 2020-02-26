@@ -114,6 +114,7 @@ void project_destroy(struct projectns * const p)
 	}
 	free(p->name);
 	free(p->reginfo);
+	strshare_unref(p->creator);
 	free(p);
 }
 

@@ -13,7 +13,6 @@ static void user_identify_notice(user_t *u);
 
 static void mod_init(module_t *m)
 {
-	hook_add_event("user_identify");
 	hook_add_user_identify(user_identify_notice);
 }
 

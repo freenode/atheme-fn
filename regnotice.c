@@ -15,9 +15,7 @@ static void chan_reg_notice(void *vptr);
 
 static void mod_init(module_t *m)
 {
-	hook_add_event("user_register");
 	hook_add_hook("user_register", nick_reg_notice);
-	hook_add_event("channel_register");
 	hook_add_hook_first("channel_register", chan_reg_notice);
 }
 

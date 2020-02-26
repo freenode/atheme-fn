@@ -142,16 +142,9 @@ static void mod_init(module_t *const restrict m)
 	if (!use_projectns_main_symbols(m))
 		return;
 
-	hook_add_event("user_info");
 	hook_add_user_info(userinfo_hook);
-
-	hook_add_event("channel_info");
 	hook_add_channel_info(chaninfo_hook);
-
-	hook_add_event("channel_can_register");
 	hook_add_channel_can_register(try_register_hook);
-
-	hook_add_event("channel_register");
 	hook_add_channel_register(did_register_hook);
 
 	add_bool_conf_item("REGISTER_REQUIRE_NAMESPACE", &projectsvs->me->conf_table, 0, &register_require_namespace, false);

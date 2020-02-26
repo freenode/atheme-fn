@@ -10,34 +10,16 @@
 #include "fn-compat.h"
 #include "atheme.h"
 
-static void nick_reg_notice(void *vptr);
-static void chan_reg_notice(void *vptr);
-
-static void mod_init(module_t *m)
+static void nick_reg_notice(myuser_t *mu)
 {
-	hook_add_hook("user_register", nick_reg_notice);
-	hook_add_hook_first("channel_register", chan_reg_notice);
-}
-
-static void mod_deinit(module_unload_intent_t intentvoid)
-{
-	hook_del_hook("user_register", nick_reg_notice);
-	hook_del_hook("channel_register", chan_reg_notice);
-}
-
-static void nick_reg_notice(void *vptr)
-{
-	myuser_t *mu = vptr;
-
 	myuser_notice(nicksvs.nick, mu, " ");
 	myuser_notice(nicksvs.nick, mu, "For frequently-asked questions about the network, please see the");
 	myuser_notice(nicksvs.nick, mu, "Knowledge Base page (https://freenode.net/kb/all). Should you need more");
 	myuser_notice(nicksvs.nick, mu, "help you can /join #freenode to find network staff.");
 }
 
-static void chan_reg_notice(void *vptr)
+static void chan_reg_notice(hook_channel_req_t *hdata)
 {
-	hook_channel_req_t *hdata = vptr;
 	sourceinfo_t *si = hdata->si;
 	mychan_t *mc = hdata->mc;
 
@@ -65,6 +47,18 @@ static void chan_reg_notice(void *vptr)
 	mc->mlock_off |= CMODE_SEC;
 	/* not needed now that we have founder_flags in config */
 	/*chanacs_change_simple(mc, &si->smu->ent, NULL, 0, CA_AUTOOP);*/
+}
+
+static void mod_init(module_t *m)
+{
+	hook_add_user_register(nick_reg_notice);
+	hook_add_first_channel_register(chan_reg_notice);
+}
+
+static void mod_deinit(module_unload_intent_t intentvoid)
+{
+	hook_del_user_register(nick_reg_notice);
+	hook_del_channel_register(chan_reg_notice);
 }
 
 DECLARE_MODULE_V1

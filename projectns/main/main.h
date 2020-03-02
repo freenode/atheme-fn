@@ -12,7 +12,7 @@
 #include "fn-compat.h"
 #include "../projectns_common.h"
 
-#define ENT_PRIVDATA_NAME "freenode:projects"
+#define MYUSER_PRIVDATA_NAME "freenode:projects"
 
 // main.c
 extern unsigned int projectns_abirev;
@@ -27,8 +27,8 @@ void init_db(void);
 void deinit_db(void);
 
 // objects.c
-bool contact_new(struct projectns * const p, myentity_t * const mt);
-bool contact_destroy(struct projectns * const p, myentity_t * const mt);
+bool contact_new(struct projectns * const p, myuser_t * const mu);
+bool contact_destroy(struct projectns * const p, myuser_t * const mt);
 struct projectns *project_new(const char * const name);
 struct projectns *project_find(const char * const name);
 void project_destroy(struct projectns * const p);
@@ -42,7 +42,7 @@ bool persist_load_data(module_t *m);
 // util.c
 bool is_valid_project_name(const char * const name);
 struct projectns *channame_get_project(const char * const name, char **out_namespace);
-mowgli_list_t *entity_get_projects(myentity_t *mt);
+mowgli_list_t *myuser_get_projects(myuser_t *mu);
 void show_marks(sourceinfo_t *si, struct projectns *p);
 
 #endif

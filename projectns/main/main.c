@@ -20,7 +20,7 @@ struct projectsvs projectsvs = {
 	.contact_destroy = contact_destroy,
 	.show_marks = show_marks,
 	.is_valid_project_name = is_valid_project_name,
-	.entity_get_projects = entity_get_projects,
+	.myuser_get_projects = myuser_get_projects,
 	.channame_get_project = channame_get_project,
 };
 

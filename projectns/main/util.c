@@ -70,16 +70,16 @@ struct projectns *channame_get_project(const char * const name, char **out_names
 	return p;
 }
 
-mowgli_list_t *entity_get_projects(myentity_t *mt)
+mowgli_list_t *myuser_get_projects(myuser_t *mu)
 {
 	mowgli_list_t *l;
 
-	l = privatedata_get(mt, ENT_PRIVDATA_NAME);
+	l = privatedata_get(mu, MYUSER_PRIVDATA_NAME);
 	if (l)
 		return l;
 
 	l = mowgli_list_create();
-	privatedata_set(mt, ENT_PRIVDATA_NAME, l);
+	privatedata_set(mu, MYUSER_PRIVDATA_NAME, l);
 
 	return l;
 }

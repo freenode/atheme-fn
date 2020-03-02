@@ -46,16 +46,6 @@ static void cmd_contact(sourceinfo_t *si, int parc, char *parv[])
 		return;
 	}
 
-	/* Only allow myusers for now.
-	 * Rationale: while we could accept arbitrary entities,
-	 *  - exttargets are not suitable group contacts
-	 *  - GroupServ groups:
-	 *     - don't exist on freenode as of writing this
-	 *     - maybe shouldn't be GCs (otoh, they might replace some uses for role accounts?)
-	 *     - aren't really handled the way we handle myusers (with nickserv hooks and all)
-	 * If you're looking to change this, make sure to check for allow_foundership
-	 * since "can't be a channel founder" should catch the more obviously stupid things.
-	 */
 	myuser_t *mu = myuser_find_ext(target);
 
 	if (!mu)
@@ -74,7 +64,7 @@ static void cmd_contact(sourceinfo_t *si, int parc, char *parv[])
 
 	if (add_or_del == CONTACT_ADD)
 	{
-		if (projectsvs->contact_new(p, entity(mu)))
+		if (projectsvs->contact_new(p, mu))
 		{
 			logcommand(si, CMDLOG_ADMIN, "PROJECT:CONTACT:ADD: \2%s\2 to \2%s\2", entity(mu)->name, p->name);
 			command_success_nodata(si, _("\2%s\2 was set as a contact for project \2%s\2."), entity(mu)->name, p->name);
@@ -86,7 +76,7 @@ static void cmd_contact(sourceinfo_t *si, int parc, char *parv[])
 	}
 	else // CONTACT_DEL
 	{
-		if (projectsvs->contact_destroy(p, entity(mu)))
+		if (projectsvs->contact_destroy(p, mu))
 		{
 			logcommand(si, CMDLOG_ADMIN, "PROJECT:CONTACT:DEL: \2%s\2 from \2%s\2", entity(mu)->name, p->name);
 			command_success_nodata(si, _("\2%s\2 was removed as a contact for project \2%s\2."), entity(mu)->name, p->name);

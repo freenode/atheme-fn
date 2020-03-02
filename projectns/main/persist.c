@@ -70,7 +70,7 @@ bool persist_load_data(module_t *m)
 
 		/* These are safe as the list metadata is copied by value;
 		 * the actual lists comprise nodes of strings (for channel namespaces)
-		 * or myentity_t* (for contacts), which are still valid.
+		 * or myuser_t* (for contacts), which are still valid.
 		 *
 		 * We do need to restore the reverse mappings as we destroyed them
 		 * on unloading due to them having pointers that would now be stale.
@@ -89,7 +89,7 @@ bool persist_load_data(module_t *m)
 
 		MOWGLI_ITER_FOREACH(n, new->contacts.head)
 		{
-			mowgli_node_add(new, mowgli_node_create(), entity_get_projects(n->data));
+			mowgli_node_add(new, mowgli_node_create(), myuser_get_projects(n->data));
 		}
 
 		if (rec->version >= PROJECTNS_MINVER_CLOAKNS)

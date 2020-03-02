@@ -9,31 +9,31 @@
 #include "fn-compat.h"
 #include "main.h"
 
-bool contact_new(struct projectns * const p, myentity_t * const mt)
+bool contact_new(struct projectns * const p, myuser_t * const mu)
 {
 	mowgli_node_t *n, *tn;
 	MOWGLI_ITER_FOREACH(n, p->contacts.head)
 	{
-		myentity_t *contact_mt = n->data;
-		if (contact_mt == mt)
+		myuser_t *contact_mu = n->data;
+		if (contact_mu == mu)
 			return false;
 	}
 
-	mowgli_node_add(p,  mowgli_node_create(), projectsvs.entity_get_projects(mt));
-	mowgli_node_add(mt, mowgli_node_create(), &p->contacts);
+	mowgli_node_add(p,  mowgli_node_create(), projectsvs.myuser_get_projects(mu));
+	mowgli_node_add(mu, mowgli_node_create(), &p->contacts);
 	return true;
 }
 
-bool contact_destroy(struct projectns * const p, myentity_t * const mt)
+bool contact_destroy(struct projectns * const p, myuser_t * const mu)
 {
-	mowgli_list_t *mt_projects = projectsvs.entity_get_projects(mt);
+	mowgli_list_t *mu_projects = projectsvs.myuser_get_projects(mu);
 	mowgli_node_t *n, *tn;
 
-	MOWGLI_ITER_FOREACH_SAFE(n, tn, mt_projects->head)
+	MOWGLI_ITER_FOREACH_SAFE(n, tn, mu_projects->head)
 	{
 		if (p == n->data)
 		{
-			mowgli_node_delete(n, mt_projects);
+			mowgli_node_delete(n, mu_projects);
 			mowgli_node_free(n);
 			break;
 		}
@@ -41,7 +41,7 @@ bool contact_destroy(struct projectns * const p, myentity_t * const mt)
 
 	MOWGLI_ITER_FOREACH_SAFE(n, tn, p->contacts.head)
 	{
-		if (mt == n->data)
+		if (mu == n->data)
 		{
 			mowgli_node_delete(n, &p->contacts);
 			mowgli_node_free(n);
@@ -117,13 +117,9 @@ void project_destroy(struct projectns * const p)
 	free(p);
 }
 
-/* FIXME: This should hook into non-user entity deletions
- * as well (e.g. groupserv groups). Atheme does not currently
- * provide a generic entity deletion hook so this will have to do.
- */
 static void userdelete_hook(myuser_t *mu)
 {
-	mowgli_list_t *l = entity_get_projects(entity(mu));
+	mowgli_list_t *l = myuser_get_projects(mu);
 	mowgli_node_t *n, *tn;
 
 	MOWGLI_ITER_FOREACH_SAFE(n, tn, l->head)
@@ -137,7 +133,7 @@ static void userdelete_hook(myuser_t *mu)
 		mowgli_node_t *n2, *tn2;
 		MOWGLI_ITER_FOREACH_SAFE(n2, tn2, p->contacts.head)
 		{
-			if (entity(mu) == (myentity_t*)n2->data)
+			if (mu == (myuser_t*)n2->data)
 			{
 				mowgli_node_delete(n2, &p->contacts);
 				mowgli_node_free(n2);
@@ -163,7 +159,7 @@ void deinit_aux_structures(void)
 	mowgli_patricia_destroy(projectsvs.projects_by_channelns, NULL, NULL);
 	mowgli_patricia_destroy(projectsvs.projects_by_cloakns, NULL, NULL);
 
-	/* Clear entity->project mappings
+	/* Clear myuser->project mappings
 	 * These store lists of pointers, which will be replaced
 	 * even if we are being reloaded
 	 */
@@ -172,7 +168,7 @@ void deinit_aux_structures(void)
 
 	MYENTITY_FOREACH(mt, &state)
 	{
-		mowgli_list_t *l = privatedata_get(mt, ENT_PRIVDATA_NAME);
+		mowgli_list_t *l = privatedata_get(mt, MYUSER_PRIVDATA_NAME);
 		if (l)
 		{
 			mowgli_node_t *n, *tn;

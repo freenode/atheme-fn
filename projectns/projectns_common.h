@@ -56,12 +56,12 @@ struct projectsvs {
 	struct projectns *(*project_find)(const char *name);
 	void (*project_destroy)(struct projectns *p);
 
-	bool (*contact_new)(struct projectns * const p, myentity_t * const mt);
-	bool (*contact_destroy)(struct projectns * const p, myentity_t * const mt);
+	bool (*contact_new)(struct projectns * const p, myuser_t * const mu);
+	bool (*contact_destroy)(struct projectns * const p, myuser_t * const mu);
 
 	void (*show_marks)(sourceinfo_t *si, struct projectns *p);
 	bool (*is_valid_project_name)(const char *name);
-	mowgli_list_t *(*entity_get_projects)(myentity_t *mt);
+	mowgli_list_t *(*myuser_get_projects)(myuser_t *mt);
 	struct projectns *(*channame_get_project)(const char *name, char **out_namespace);
 };
 

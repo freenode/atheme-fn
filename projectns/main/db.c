@@ -66,9 +66,9 @@ static void db_h_contact(database_handle_t *db, const char *type)
 	const char *contact_name = db_sread_word(db);
 
 	struct projectns *project = mowgli_patricia_retrieve(projectsvs.projects, project_name);
-	myentity_t *contact = myentity_find(contact_name);
+	myuser_t *contact = myuser_find(contact_name);
 
-	mowgli_node_add(project, mowgli_node_create(), entity_get_projects(contact));
+	mowgli_node_add(project, mowgli_node_create(), myuser_get_projects(contact));
 	mowgli_node_add(contact, mowgli_node_create(), &project->contacts);
 }
 

@@ -48,6 +48,7 @@ SRCS = \
 	projectns/hooks.c \
 	projectns/set.c \
 	projectns/manage.c \
+	projectns/audit.c \
 	projectns/cs_claim.c
 
 # To compile your own modules, add them to SRCS or make blegh.so

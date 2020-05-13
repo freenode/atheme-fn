@@ -13,12 +13,12 @@
 static void cmd_audit(sourceinfo_t *si, int parc, char *parv[]);
 
 command_t ps_audit = {
-	.name	   = "AUDIT",
-	.desc	   = N_("Lists projects with incomplete registrations"),
-	.access	 = PRIV_PROJECT_AUSPEX,
-	.maxparc	= 1,
-	.cmd		= cmd_audit,
-	.help	   = { .path = "freenode/project_audit" }
+	.name       = "AUDIT",
+	.desc       = N_("Lists projects with incomplete registrations"),
+	.access     = PRIV_PROJECT_AUSPEX,
+	.maxparc    = 1,
+	.cmd        = cmd_audit,
+	.help       = { .path = "freenode/project_audit" }
 };
 
 static void cmd_audit(sourceinfo_t *si, int parc, char *parv[])
@@ -73,8 +73,8 @@ static void cmd_audit(sourceinfo_t *si, int parc, char *parv[])
 		{
 			matches++;
 			command_success_nodata(si, _("- %s (%s; %s)"), project->name,
-									   (channels[0] ? channels : _("\2no channels\2")),
-									   (contacts[0] ? contacts : _("\2no contacts\2")));
+			                           (channels[0] ? channels : _("\2no channels\2")),
+			                           (contacts[0] ? contacts : _("\2no contacts\2")));
 		}
 	}
 
@@ -82,8 +82,8 @@ static void cmd_audit(sourceinfo_t *si, int parc, char *parv[])
 		command_success_nodata(si, _("All projects correctly registered."));
 	else
 		command_success_nodata(si, ngettext(N_("\2%d\2 project in need of attention."),
-											N_("\2%d\2 projects in need of attention."),
-											matches), matches);
+		                                    N_("\2%d\2 projects in need of attention."),
+		                                    matches), matches);
 	logcommand(si, CMDLOG_ADMIN, "PROJECT:AUDIT: \2%d\2 projects", matches);
 }
 

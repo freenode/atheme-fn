@@ -78,6 +78,9 @@ bool persist_load_data(module_t *m)
 		new->channel_ns = old_p->channel_ns;
 		new->contacts   = old_p->contacts;
 
+		// As above; mark structure only contains integers and char*
+		new->marks      = old_p->marks;
+
 		mowgli_node_t *n;
 		MOWGLI_ITER_FOREACH(n, new->channel_ns.head)
 		{

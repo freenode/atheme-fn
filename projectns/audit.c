@@ -18,21 +18,30 @@ command_t ps_audit = {
 	.access     = PRIV_PROJECT_AUSPEX,
 	.maxparc    = 1,
 	.cmd        = cmd_audit,
-	.help       = { .path = "freenode/project_audit" }
+	.help       = { .path = "freenode/project_audit" },
 };
 
 static void cmd_audit(sourceinfo_t *si, int parc, char *parv[])
 {
-	char *modestr = parv[0];
-	int check_channels = 0;
-	int check_contacts = 0;
+	bool check_channels = false;
+	bool check_contacts = false;
+
+	const char *what = "";
 
 	if (parc == 0)
-		check_channels = check_contacts = 1;
+	{
+		check_channels = check_contacts = true;
+	}
 	else if (strcasecmp(parv[0], "CHANNELS") == 0)
-		check_channels = 1;
+	{
+		check_channels = true;
+		what = "CHANNELS:";
+	}
 	else if (strcasecmp(parv[0], "CONTACTS") == 0)
-		check_contacts = 1;
+	{
+		check_contacts = true;
+		what = "CONTACTS:";
+	}
 	else
 	{
 		command_fail(si, fault_badparams, STR_INVALID_PARAMS, "AUDIT");
@@ -65,11 +74,7 @@ static void cmd_audit(sourceinfo_t *si, int parc, char *parv[])
 			mowgli_strlcat(contacts, ((myentity_t*)n->data)->name, sizeof contacts);
 		}
 
-		int flagged = 0;
-		flagged |= check_channels & !channels[0];
-		flagged |= check_contacts & !contacts[0];
-
-		if (flagged)
+		if ((check_channels && !channels[0]) || (check_contacts && !contacts[0]))
 		{
 			matches++;
 			command_success_nodata(si, _("- %s (%s; %s)"), project->name,
@@ -84,7 +89,7 @@ static void cmd_audit(sourceinfo_t *si, int parc, char *parv[])
 		command_success_nodata(si, ngettext(N_("\2%d\2 project in need of attention."),
 		                                    N_("\2%d\2 projects in need of attention."),
 		                                    matches), matches);
-	logcommand(si, CMDLOG_ADMIN, "PROJECT:AUDIT: \2%d\2 projects", matches);
+	logcommand(si, CMDLOG_ADMIN, "PROJECT:AUDIT:%s \2%d\2 projects", what, matches);
 }
 
 static void mod_init(module_t *const restrict m)

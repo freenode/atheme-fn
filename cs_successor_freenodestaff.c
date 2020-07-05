@@ -19,11 +19,11 @@ static void channel_pick_successor_hook(hook_channel_succession_req_t *req)
 		return;
 
 	/* Use freenode-staff if it exists.
-	 * If myuser_find returns NULL the normal successor logic is used.
+	 * If myuser_find_ext returns NULL the normal successor logic is used.
 	 * If some other user of this hook picked a successor
 	 * we intentionally overrule it.
 	 */
-	req->mu = myuser_find("freenode-staff");
+	req->mu = myuser_find_ext("freenode-staff");
 }
 
 static void mod_init(module_t *m)

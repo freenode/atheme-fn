@@ -1,0 +1,9 @@
+Help for AUDIT:
+
+AUDIT finds all registered projects with incomplete registrations.
+
+Syntax: AUDIT [CHANNELS|CONTACTS]
+
+Examples:
+    /msg &nick& AUDIT
+    /msg &nick& AUDIT CHANNELS

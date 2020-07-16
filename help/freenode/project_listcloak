@@ -1,0 +1,9 @@
+Help for LISTCLOAK:
+
+LISTCLOAK finds all cloak namespaces matching a simple glob pattern.
+
+Syntax: LISTCLOAK <pattern>
+
+Examples:
+    /msg &nick& LISTCLOAK *
+    /msg &nick& LISTCLOAK wiki*

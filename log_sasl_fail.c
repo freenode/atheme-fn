@@ -1,5 +1,8 @@
+#include "fn-compat.h"
 #include "atheme.h"
+#ifdef NEED_OLD_COMPAT_INCLUDES
 #include "pmodule.h"
+#endif
 
 void (*old_encap_handler)(sourceinfo_t *, int, char *[]) = 0;
 

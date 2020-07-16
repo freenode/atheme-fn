@@ -9,6 +9,7 @@
 #ifndef PROJECTNS_H
 #define PROJECTNS_H
 
+#include "fn-compat.h"
 #include "atheme.h"
 #include "projectns_common.h"
 
@@ -24,7 +25,7 @@ static inline void projectns_main_symbol_impl(module_t *m)
 	if (*abirev != PROJECTNS_ABIREV)
 	{
 		slog(LG_ERROR, "use_projectns_main_symbols(): \2%s\2: projectns ABI revision mismatch (%u != %u), please recompile.", m->name, PROJECTNS_ABIREV, *abirev);
-		m->mflags = MODTYPE_FAIL;
+		m->mflags = MODFLAG_FAIL;
 		return;
 	}
 
@@ -35,7 +36,7 @@ static inline void projectns_main_symbol_impl(module_t *m)
 static inline bool use_projectns_main_symbols(module_t *m)
 {
 	projectns_main_symbol_impl(m);
-	return m->mflags != MODTYPE_FAIL;
+	return m->mflags != MODFLAG_FAIL;
 }
 
 #endif

@@ -9,6 +9,7 @@
 #ifndef PROJECTNS_COMMON_H
 #define PROJECTNS_COMMON_H
 
+#include "fn-compat.h"
 #include "atheme.h"
 
 #define PRIV_PROJECT_ADMIN  "project:admin"
@@ -17,7 +18,7 @@
 // Arbitrary number that should avoid truncation even with various protocol overhead
 #define PROJECTNAMELEN CHANNELLEN
 
-#define PROJECTNS_ABIREV 6U
+#define PROJECTNS_ABIREV 8U
 
 #define PROJECTNS_MINVER_CLOAKNS 4U
 
@@ -48,9 +49,16 @@ struct projectsvs {
 	service_t *me;
 	mowgli_patricia_t *projects;
 	mowgli_patricia_t *projects_by_channelns;
+	mowgli_patricia_t *projects_by_cloakns;
 	struct projectsvs_conf config;
+
 	struct projectns *(*project_new)(const char *name);
+	struct projectns *(*project_find)(const char *name);
 	void (*project_destroy)(struct projectns *p);
+
+	bool (*contact_new)(struct projectns * const p, myentity_t * const mt);
+	bool (*contact_destroy)(struct projectns * const p, myentity_t * const mt);
+
 	void (*show_marks)(sourceinfo_t *si, struct projectns *p);
 	bool (*is_valid_project_name)(const char *name);
 	mowgli_list_t *(*entity_get_projects)(myentity_t *mt);

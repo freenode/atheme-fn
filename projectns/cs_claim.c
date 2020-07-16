@@ -6,6 +6,7 @@
  * ChanServ command for contacts to claim channels
  */
 
+#include "fn-compat.h"
 #include "atheme.h"
 #include "projectns.h"
 

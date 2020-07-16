@@ -8,6 +8,7 @@
  * Help command, adapted from the operserv/help code
  */
 
+#include "fn-compat.h"
 #include "atheme.h"
 #include "projectns.h"
 

@@ -6,6 +6,7 @@
  * Commands to manipulate projects' settings
  */
 
+#include "fn-compat.h"
 #include "atheme.h"
 #include "projectns.h"
 
@@ -96,7 +97,7 @@ static void set_openreg(sourceinfo_t *si, int parc, char *parv[])
 		return;
 	}
 
-	struct projectns *p = mowgli_patricia_retrieve(projectsvs->projects, name);
+	struct projectns *p = projectsvs->project_find(name);
 	if (!p)
 	{
 		command_fail(si, fault_nosuch_target, _("The project \2%s\2 does not exist."), name);
@@ -125,7 +126,7 @@ static void set_reginfo(sourceinfo_t *si, int parc, char *parv[])
 	char *name = parv[0];
 	char *info = parv[1];
 
-	struct projectns *p = mowgli_patricia_retrieve(projectsvs->projects, name);
+	struct projectns *p = projectsvs->project_find(name);
 	if (!p)
 	{
 		command_fail(si, fault_nosuch_target, _("The project \2%s\2 does not exist."), name);
@@ -160,7 +161,7 @@ static void set_name(sourceinfo_t *si, int parc, char *parv[])
 		return;
 	}
 
-	struct projectns *p = mowgli_patricia_retrieve(projectsvs->projects, target);
+	struct projectns *p = projectsvs->project_find(target);
 	if (!p)
 	{
 		command_fail(si, fault_nosuch_target, _("The project \2%s\2 does not exist."), target);
@@ -181,7 +182,7 @@ static void set_name(sourceinfo_t *si, int parc, char *parv[])
 		return;
 	}
 
-	if (mowgli_patricia_retrieve(projectsvs->projects, newname))
+	if (projectsvs->project_find(newname) != p)
 	{
 		command_fail(si, fault_alreadyexists, _("A project named \2%s\2 already exists. Please choose a different name."), newname);
 		return;

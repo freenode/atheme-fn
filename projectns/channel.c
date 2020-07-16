@@ -6,6 +6,7 @@
  * Commands to manage channel namespaces
  */
 
+#include "fn-compat.h"
 #include "atheme.h"
 #include "projectns.h"
 
@@ -67,7 +68,7 @@ static void cmd_channel(sourceinfo_t *si, int parc, char *parv[])
 		}
 	}
 
-	struct projectns *p = mowgli_patricia_retrieve(projectsvs->projects, project);
+	struct projectns *p = projectsvs->project_find(project);
 
 	if (!p)
 	{
@@ -101,7 +102,7 @@ static void cmd_channel(sourceinfo_t *si, int parc, char *parv[])
 		MOWGLI_ITER_FOREACH_SAFE(n, tn, chan_p->channel_ns.head)
 		{
 			const char *ns = n->data;
-			if (strcasecmp(ns, namespace) == 0)
+			if (irccasecmp(ns, namespace) == 0)
 			{
 				free(n->data);
 

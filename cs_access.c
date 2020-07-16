@@ -7,8 +7,11 @@
  * $Id: cs_access.c 68 2012-06-16 20:44:28Z stephen $
  */
 
+#include "fn-compat.h"
 #include "atheme.h"
+#ifdef NEED_OLD_COMPAT_INCLUDES
 #include "template.h"
+#endif
 
 static void cs_cmd_access(sourceinfo_t *si, int parc, char *parv[]);
 

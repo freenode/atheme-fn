@@ -87,6 +87,9 @@ void _moddeinit(module_unload_intent_t intent)
 
 	mowgli_heap_destroy(akick_timeout_heap);
 	mowgli_patricia_destroy(cs_akick_cmds, NULL, NULL);
+
+	if (akickdel_next != 0)
+		mowgli_timer_destroy(base_eventloop, akick_timeout_check_timer);
 }
 
 static void clear_bans_matching_entity(mychan_t *mc, myentity_t *mt)

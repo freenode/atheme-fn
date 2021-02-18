@@ -16,8 +16,9 @@ static char *register_project_advice;
 
 static void userinfo_hook(hook_user_req_t *hdata)
 {
-	if (hdata->si->smu == hdata->mu ||
-			has_priv(hdata->si, PRIV_PROJECT_AUSPEX))
+	bool priv = has_priv(hdata->si, PRIV_PROJECT_AUSPEX);
+
+	if (hdata->si->smu == hdata->mu || has_priv)
 	{
 		mowgli_node_t *n;
 		mowgli_list_t *plist = projectsvs->myuser_get_projects(hdata->mu);
@@ -27,33 +28,54 @@ static void userinfo_hook(hook_user_req_t *hdata)
 
 			mowgli_node_t *n2;
 			char buf[BUFSIZE] = "";
-			bool need_separator = false;
+
+			bool channels_need_separator = false;
+
+			if (has_priv && project->marks.head != NULL)
+			{
+				mowgli_strlcpy(buf, _("\2MARKED\2"), sizeof buf);
+				channels_need_separator = true;
+			}
+
+			bool cloaks_need_separator = channels_need_separator;
 			MOWGLI_ITER_FOREACH(n2, project->channel_ns.head)
 			{
 				if (strlen(buf) > 80)
 				{
 					command_success_nodata(hdata->si, _("Group contact for %s (%s)"), project->name, buf);
 					buf[0] = '\0';
+					channels_need_separator = false;
 				}
-				need_separator = true;
 				if (buf[0])
-					mowgli_strlcat(buf, ", ", sizeof buf);
+				{
+					if (channels_need_separator)
+					{
+						mowgli_strlcat(buf, "; ", sizeof buf);
+						channels_need_separator = false;
+					}
+					else
+					{
+						mowgli_strlcat(buf, ", ", sizeof buf);
+					}
+				}
 				mowgli_strlcat(buf, (const char*)n2->data, sizeof buf);
+				cloaks_need_separator = true;
 			}
+
 			MOWGLI_ITER_FOREACH(n2, project->cloak_ns.head)
 			{
 				if (strlen(buf) > 80)
 				{
 					command_success_nodata(hdata->si, _("Group contact for %s (%s)"), project->name, buf);
 					buf[0] = '\0';
-					need_separator = false;
+					cloaks_need_separator = false;
 				}
 				if (buf[0])
 				{
-					if (need_separator)
+					if (cloaks_need_separator)
 					{
 						mowgli_strlcat(buf, "; ", sizeof buf);
-						need_separator = false;
+						cloaks_need_separator = false;
 					}
 					else
 					{
@@ -80,7 +102,13 @@ static void chaninfo_hook(hook_channel_req_t *hdata)
 	struct projectns *p = projectsvs->channame_get_project(hdata->mc->name, &namespace);
 
 	if (p)
-		command_success_nodata(hdata->si, "The \2%s\2 namespace is registered to the \2%s\2 project", namespace, p->name);
+	{
+		bool marked = p->marks.head != NULL;
+		if (marked && has_priv(hdata->si, PRIV_PROJECT_AUSPEX))
+			command_success_nodata(hdata->si, _("The \2%s\2 namespace is registered to the \2%s\2 project (\2MARKED\2)"), namespace, p->name);
+		else
+			command_success_nodata(hdata->si, _("The \2%s\2 namespace is registered to the \2%s\2 project"), namespace, p->name);
+	}
 
 	free(namespace);
 }

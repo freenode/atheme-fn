@@ -18,4 +18,5 @@ void deinit_config(void)
 {
 	del_conf_item("NAMESPACE_SEPARATORS", &projectsvs.me->conf_table);
 	del_conf_item("DEFAULT_OPEN_REGISTRATION", &projectsvs.me->conf_table);
+	free(projectsvs.config.namespace_separators);
 }

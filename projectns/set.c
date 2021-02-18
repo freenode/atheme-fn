@@ -217,6 +217,7 @@ static void mod_deinit(const module_unload_intent_t unused)
 	command_delete(&ps_set_openreg, set_cmdtree);
 	command_delete(&ps_set_reginfo, set_cmdtree);
 	command_delete(&ps_set_name, set_cmdtree);
+	mowgli_patricia_destroy(set_cmdtree, NULL, NULL);
 }
 
 DECLARE_MODULE_V1

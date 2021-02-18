@@ -24,7 +24,8 @@ static void userinfo_hook(hook_user_req_t *hdata)
 		mowgli_list_t *plist = projectsvs->myuser_get_projects(hdata->mu);
 		MOWGLI_ITER_FOREACH(n, plist->head)
 		{
-			struct projectns *project = n->data;
+			struct project_contact *contact = n->data;
+			struct projectns *project = contact->project;
 
 			mowgli_node_t *n2;
 			char buf[BUFSIZE] = "";
@@ -131,7 +132,8 @@ static void try_register_hook(hook_channel_register_check_t *hdata)
 		bool is_gc = false;
 		MOWGLI_ITER_FOREACH(n, project->contacts.head)
 		{
-			if (hdata->si->smu == n->data)
+			struct project_contact *contact = n->data;
+			if (hdata->si->smu == contact->mu)
 			{
 				is_gc = true;
 				break;

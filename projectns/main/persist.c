@@ -68,28 +68,52 @@ bool persist_load_data(module_t *m)
 
 		mowgli_patricia_add(projectsvs.projects, new->name, new);
 
-		/* These are safe as the list metadata is copied by value;
-		 * the actual lists comprise nodes of strings (for channel namespaces)
-		 * or myuser_t* (for contacts), which are still valid.
+		/* This is safe as the list metadata is copied by value;
+		 * the actual list comprises nodes of strings (channel namespaces),
+		 * which are still valid.
 		 *
-		 * We do need to restore the reverse mappings as we destroyed them
-		 * on unloading due to them having pointers that would now be stale.
+		 * We do need to restore the reverse mapping as we destroyed it
+		 * on unloading due to it having pointers that would now be stale.
 		 */
 		new->channel_ns = old_p->channel_ns;
-		new->contacts   = old_p->contacts;
 
 		// As above; mark structure only contains integers and char*
 		new->marks      = old_p->marks;
 
-		mowgli_node_t *n;
+		mowgli_node_t *n, *tn;
 		MOWGLI_ITER_FOREACH(n, new->channel_ns.head)
 		{
 			mowgli_patricia_add(projectsvs.projects_by_channelns, n->data, new);
 		}
 
-		MOWGLI_ITER_FOREACH(n, new->contacts.head)
+		if (rec->version >= PROJECTNS_MINVER_CONTACT_OBJECT)
 		{
-			mowgli_node_add(new, mowgli_node_create(), myuser_get_projects(n->data));
+			// the list still holds valid objects
+			new->contacts = old_p->contacts;
+
+			MOWGLI_ITER_FOREACH(n, new->contacts.head)
+			{
+				struct project_contact *contact = n->data;
+				contact->project = new;
+				// the nodes are still in their proper lists
+			}
+		}
+		else
+		{
+			MOWGLI_ITER_FOREACH_SAFE(n, tn, old_p->contacts.head)
+			{
+				myuser_t *mu = n->data;
+
+				mowgli_node_delete(n, &old_p->contacts);
+				mowgli_node_free(n);
+
+				struct project_contact *contact = smalloc(sizeof *contact);
+				contact->project = new;
+				contact->mu      = mu;
+
+				mowgli_node_add(contact, &contact->myuser_n,  myuser_get_projects(contact->mu));
+				mowgli_node_add(contact, &contact->project_n, &new->contacts);
+			}
 		}
 
 		if (rec->version >= PROJECTNS_MINVER_CLOAKNS)

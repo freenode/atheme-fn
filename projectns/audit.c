@@ -69,9 +69,10 @@ static void cmd_audit(sourceinfo_t *si, int parc, char *parv[])
 		char contacts[BUFSIZE] = "";
 		MOWGLI_ITER_FOREACH(n, project->contacts.head)
 		{
+			struct project_contact *contact = n->data;
 			if (contacts[0])
 				mowgli_strlcat(contacts, ", ", sizeof contacts);
-			mowgli_strlcat(contacts, ((myentity_t*)n->data)->name, sizeof contacts);
+			mowgli_strlcat(contacts, ((myentity_t*)contact->mu)->name, sizeof contacts);
 		}
 
 		if ((check_channels && !channels[0]) || (check_contacts && !contacts[0]))

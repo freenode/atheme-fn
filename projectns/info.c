@@ -87,6 +87,7 @@ static void cmd_info(sourceinfo_t *si, int parc, char *parv[])
 
 	MOWGLI_ITER_FOREACH(n, p->contacts.head)
 	{
+		struct project_contact *contact = n->data;
 		if (strlen(buf) > 80)
 		{
 			command_success_nodata(si, _("Group contacts: %s"), buf);
@@ -94,7 +95,7 @@ static void cmd_info(sourceinfo_t *si, int parc, char *parv[])
 		}
 		if (buf[0])
 			mowgli_strlcat(buf, ", ", sizeof buf);
-		mowgli_strlcat(buf, ((myentity_t*)n->data)->name, sizeof buf);
+		mowgli_strlcat(buf, ((myentity_t*)contact->mu)->name, sizeof buf);
 	}
 
 	command_success_nodata(si, _("Group contacts: %s"), (buf[0] ? buf : "(none)"));

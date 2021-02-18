@@ -45,7 +45,9 @@ static void cmd_register(sourceinfo_t *si, int parc, char *parv[])
 		return;
 	}
 
-	projectsvs->project_new(name);
+	struct projectns *p = projectsvs->project_new(name);
+	p->creation_time = CURRTIME;
+	p->creator       = strshare_get(get_storage_oper_name(si));
 
 	logcommand(si, CMDLOG_ADMIN, "PROJECT:REGISTER: \2%s\2", name);
 	command_success_nodata(si, _("The project \2%s\2 has been registered."), name);

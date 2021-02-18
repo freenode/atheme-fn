@@ -101,7 +101,7 @@ static void cmd_cloak(sourceinfo_t *si, int parc, char *parv[])
 	{
 		if (cloak_p != p)
 		{
-			command_fail(si, fault_nosuch_key, _("The \2%s\2 namespace is registered to project \2%s\2, but you tried to remove it from project \2%s\2."), namespace, p->name, cloak_p->name);
+			command_fail(si, fault_nosuch_key, _("The \2%s\2 namespace is registered to project \2%s\2, but you tried to remove it from project \2%s\2."), namespace, cloak_p->name, p->name);
 			return;
 		}
 

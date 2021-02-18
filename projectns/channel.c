@@ -92,7 +92,7 @@ static void cmd_channel(sourceinfo_t *si, int parc, char *parv[])
 	{
 		if (chan_p != p)
 		{
-			command_fail(si, fault_nosuch_key, _("The \2%s\2 namespace is registered to project \2%s\2, but you tried to remove it from project \2%s\2."), namespace, p->name, chan_p->name);
+			command_fail(si, fault_nosuch_key, _("The \2%s\2 namespace is registered to project \2%s\2, but you tried to remove it from project \2%s\2."), namespace, chan_p->name, p->name);
 			return;
 		}
 

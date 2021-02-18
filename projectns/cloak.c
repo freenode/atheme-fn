@@ -47,6 +47,16 @@ static void cmd_cloak(sourceinfo_t *si, int parc, char *parv[])
 		return;
 	}
 
+	// strip trailing "/*" (for simplicity, just strip any trailing sequence of these)
+	// leave the first character alone to ensure we actually have something to add
+	for (size_t i = strlen(namespace) - 1; i > 0; i--)
+	{
+		if (namespace[i] != '/' && namespace[i] != '*')
+			break;
+
+		namespace[i] = '\0';
+	}
+
 	// Only check for new namespaces, in case we have bad entries from a previous configuration
 	// as we wouldn't be able to delete them otherwise
 	if (add_or_del == CLOAKNS_ADD)
@@ -54,13 +64,6 @@ static void cmd_cloak(sourceinfo_t *si, int parc, char *parv[])
 		if (strlen(namespace) >= HOSTLEN)
 		{
 			command_fail(si, fault_badparams, _("The provided cloak namespace is too long."));
-			return;
-		}
-
-		const char *last_slash = strrchr(namespace, '/');
-		if ((last_slash != NULL && !*(last_slash + 1)) || strchr(namespace, '*'))
-		{
-			command_fail(si, fault_badparams, _("Please specify only the base part of the cloak namespace."));
 			return;
 		}
 

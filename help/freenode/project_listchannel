@@ -1,0 +1,9 @@
+Help for LISTCHANNEL:
+
+LISTCHANNEL finds all channel namespaces matching a simple glob pattern.
+
+Syntax: LISTCHANNEL <pattern>
+
+Examples:
+    /msg &nick& LISTCHANNEL *
+    /msg &nick& LISTCHANNEL #wiki*

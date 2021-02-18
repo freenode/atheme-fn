@@ -40,6 +40,7 @@ SRCS = \
 	projectns/help.c \
 	projectns/info.c \
 	projectns/list.c \
+	projectns/listchannel.c \
 	projectns/listcloak.c \
 	projectns/contact.c \
 	projectns/channel.c \

@@ -18,7 +18,7 @@ static void userinfo_hook(hook_user_req_t *hdata)
 {
 	bool priv = has_priv(hdata->si, PRIV_PROJECT_AUSPEX);
 
-	if (hdata->si->smu == hdata->mu || has_priv)
+	if (hdata->si->smu == hdata->mu || priv)
 	{
 		mowgli_node_t *n;
 		mowgli_list_t *plist = projectsvs->myuser_get_projects(hdata->mu);
@@ -31,7 +31,7 @@ static void userinfo_hook(hook_user_req_t *hdata)
 
 			bool channels_need_separator = false;
 
-			if (has_priv && project->marks.head != NULL)
+			if (priv && project->marks.head != NULL)
 			{
 				mowgli_strlcpy(buf, _("\2MARKED\2"), sizeof buf);
 				channels_need_separator = true;

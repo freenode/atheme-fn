@@ -48,9 +48,10 @@ static void cmd_list(sourceinfo_t *si, int parc, char *parv[])
 			char contacts[BUFSIZE] = "";
 			MOWGLI_ITER_FOREACH(n, project->contacts.head)
 			{
+				struct project_contact *contact = n->data;
 				if (contacts[0])
 					mowgli_strlcat(contacts, ", ", sizeof contacts);
-				mowgli_strlcat(contacts, ((myentity_t*)n->data)->name, sizeof contacts);
+				mowgli_strlcat(contacts, ((myentity_t*)contact->mu)->name, sizeof contacts);
 			}
 			command_success_nodata(si, _("- %s (%s; %s)"), project->name,
 			                           (channels[0] ? channels : _("\2no channels\2")),

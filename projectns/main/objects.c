@@ -9,19 +9,24 @@
 #include "fn-compat.h"
 #include "main.h"
 
-bool contact_new(struct projectns * const p, myuser_t * const mu)
+struct project_contact *contact_new(struct projectns * const p, myuser_t * const mu)
 {
 	mowgli_node_t *n, *tn;
 	MOWGLI_ITER_FOREACH(n, p->contacts.head)
 	{
-		myuser_t *contact_mu = n->data;
-		if (contact_mu == mu)
-			return false;
+		struct project_contact *other = n->data;
+
+		if (other->mu == mu)
+			return NULL;
 	}
 
-	mowgli_node_add(p,  mowgli_node_create(), projectsvs.myuser_get_projects(mu));
-	mowgli_node_add(mu, mowgli_node_create(), &p->contacts);
-	return true;
+	struct project_contact *contact = smalloc(sizeof *contact);
+	contact->project = p;
+	contact->mu      = mu;
+
+	mowgli_node_add(contact, &contact->myuser_n,  projectsvs.myuser_get_projects(mu));
+	mowgli_node_add(contact, &contact->project_n, &p->contacts);
+	return contact;
 }
 
 bool contact_destroy(struct projectns * const p, myuser_t * const mu)
@@ -31,20 +36,12 @@ bool contact_destroy(struct projectns * const p, myuser_t * const mu)
 
 	MOWGLI_ITER_FOREACH_SAFE(n, tn, mu_projects->head)
 	{
-		if (p == n->data)
+		struct project_contact *contact = n->data;
+		if (p == contact->project)
 		{
-			mowgli_node_delete(n, mu_projects);
-			mowgli_node_free(n);
-			break;
-		}
-	}
-
-	MOWGLI_ITER_FOREACH_SAFE(n, tn, p->contacts.head)
-	{
-		if (mu == n->data)
-		{
-			mowgli_node_delete(n, &p->contacts);
-			mowgli_node_free(n);
+			mowgli_node_delete(&contact->myuser_n,  mu_projects);
+			mowgli_node_delete(&contact->project_n, &p->contacts);
+			free(contact);
 			return true;
 		}
 	}
@@ -77,7 +74,8 @@ void project_destroy(struct projectns * const p)
 
 	MOWGLI_ITER_FOREACH_SAFE(n, tn, p->contacts.head)
 	{
-		contact_destroy(p, n->data);
+		struct project_contact *contact = n->data;
+		contact_destroy(p, contact->mu);
 	}
 
 	MOWGLI_ITER_FOREACH_SAFE(n, tn, p->channel_ns.head)
@@ -125,22 +123,13 @@ static void userdelete_hook(myuser_t *mu)
 
 	MOWGLI_ITER_FOREACH_SAFE(n, tn, l->head)
 	{
-		struct projectns *p = n->data;
+		struct project_contact *contact = n->data;
 		mowgli_node_delete(n, l);
-		mowgli_node_free(n);
+		mowgli_node_delete(&contact->project_n, &contact->project->contacts);
 
-		slog(LG_REGISTER, _("PROJECT:CONTACT:LOST: \2%s\2 from \2%s\2"), entity(mu)->name, p->name);
+		slog(LG_REGISTER, _("PROJECT:CONTACT:LOST: \2%s\2 from \2%s\2"), entity(mu)->name, contact->project->name);
 
-		mowgli_node_t *n2, *tn2;
-		MOWGLI_ITER_FOREACH_SAFE(n2, tn2, p->contacts.head)
-		{
-			if (mu == (myuser_t*)n2->data)
-			{
-				mowgli_node_delete(n2, &p->contacts);
-				mowgli_node_free(n2);
-				break;
-			}
-		}
+		free(contact);
 	}
 
 	mowgli_list_free(l);
@@ -159,27 +148,6 @@ void deinit_aux_structures(void)
 {
 	mowgli_patricia_destroy(projectsvs.projects_by_channelns, NULL, NULL);
 	mowgli_patricia_destroy(projectsvs.projects_by_cloakns, NULL, NULL);
-
-	/* Clear myuser->project mappings
-	 * These store lists of pointers, which will be replaced
-	 * even if we are being reloaded
-	 */
-	myentity_t *mt;
-	myentity_iteration_state_t state;
-
-	MYENTITY_FOREACH(mt, &state)
-	{
-		mowgli_list_t *l = privatedata_get(mt, MYUSER_PRIVDATA_NAME);
-		if (l)
-		{
-			mowgli_node_t *n, *tn;
-			MOWGLI_ITER_FOREACH_SAFE(n, tn, l->head)
-			{
-				mowgli_node_delete(n, l);
-				mowgli_node_free(n);
-			}
-		}
-	}
 
 	hook_del_myuser_delete(userdelete_hook);
 }

@@ -78,10 +78,26 @@ static void db_h_contact(database_handle_t *db, const char *type)
 	const char *contact_name = db_sread_word(db);
 
 	struct projectns *project = mowgli_patricia_retrieve(projectsvs.projects, project_name);
-	myuser_t *contact = myuser_find(contact_name);
+	myuser_t *mu = myuser_find(contact_name);
 
-	mowgli_node_add(project, mowgli_node_create(), myuser_get_projects(contact));
-	mowgli_node_add(contact, mowgli_node_create(), &project->contacts);
+	struct project_contact *contact = smalloc(sizeof *contact);
+	contact->project = project;
+	contact->mu      = mu;
+
+	mowgli_node_add(contact, &contact->myuser_n,  myuser_get_projects(mu));
+	mowgli_node_add(contact, &contact->project_n, &project->contacts);
+
+	unsigned int visible, secondary;
+
+	if (db_read_uint(db, &visible))
+		contact->visible = visible;
+	else
+		return;
+
+	if (db_read_uint(db, &secondary))
+		contact->secondary = secondary;
+	else
+		return;
 }
 
 static void db_h_channelns(database_handle_t *db, const char *type)
@@ -145,9 +161,12 @@ static void write_projects_db(database_handle_t *db)
 
 		MOWGLI_ITER_FOREACH(n, project->contacts.head)
 		{
+			struct project_contact *contact = n->data;
 			db_start_row(db, DB_TYPE_CONTACT);
 			db_write_word(db, project->name);
-			db_write_word(db, ((myentity_t*)n->data)->name);
+			db_write_word(db, ((myentity_t*)contact->mu)->name);
+			db_write_uint(db, contact->visible);
+			db_write_uint(db, contact->secondary);
 			db_commit_row(db);
 		}
 

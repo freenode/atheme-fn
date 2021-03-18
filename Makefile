@@ -33,6 +33,9 @@ default: all
 SRCS = \
 	log_sasl_fail.c \
 	cs_access.c		\
+	cs_akick.c \
+	cs_quiet.c \
+	cs_why.c \
 	cs_successor_freenodestaff.c \
 	regnotice.c \
 	noemailnotice.c \

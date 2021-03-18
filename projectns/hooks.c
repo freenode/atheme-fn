@@ -24,7 +24,37 @@ static void userinfo_hook(hook_user_req_t *hdata)
 		mowgli_list_t *plist = projectsvs->myuser_get_projects(hdata->mu);
 		MOWGLI_ITER_FOREACH(n, plist->head)
 		{
-			struct projectns *project = n->data;
+			struct project_contact *contact = n->data;
+			struct projectns *project = contact->project;
+
+			const char *format, *format_empty;
+
+			if (contact->visible)
+			{
+				if (contact->secondary)
+				{
+					format       = "Secondary contact (public) for %s (%s)";
+					format_empty = "Secondary contact (public) for %s";
+				}
+				else
+				{
+					format       = "Group contact (public) for %s (%s)";
+					format_empty = "Group contact (public) for %s";
+				}
+			}
+			else
+			{
+				if (contact->secondary)
+				{
+					format       = "Secondary contact for %s (%s)";
+					format_empty = "Secondary contact for %s";
+				}
+				else
+				{
+					format       = "Group contact for %s (%s)";
+					format_empty = "Group contact for %s";
+				}
+			}
 
 			mowgli_node_t *n2;
 			char buf[BUFSIZE] = "";
@@ -42,7 +72,7 @@ static void userinfo_hook(hook_user_req_t *hdata)
 			{
 				if (strlen(buf) > 80)
 				{
-					command_success_nodata(hdata->si, _("Group contact for %s (%s)"), project->name, buf);
+					command_success_nodata(hdata->si, format, project->name, buf);
 					buf[0] = '\0';
 					channels_need_separator = false;
 				}
@@ -66,7 +96,7 @@ static void userinfo_hook(hook_user_req_t *hdata)
 			{
 				if (strlen(buf) > 80)
 				{
-					command_success_nodata(hdata->si, _("Group contact for %s (%s)"), project->name, buf);
+					command_success_nodata(hdata->si, format, project->name, buf);
 					buf[0] = '\0';
 					cloaks_need_separator = false;
 				}
@@ -89,9 +119,9 @@ static void userinfo_hook(hook_user_req_t *hdata)
 			}
 
 			if (buf[0])
-				command_success_nodata(hdata->si, _("Group contact for %s (%s)"), project->name, buf);
+				command_success_nodata(hdata->si, format, project->name, buf);
 			else
-				command_success_nodata(hdata->si, _("Group contact for %s"), project->name);
+				command_success_nodata(hdata->si, format_empty, project->name);
 		}
 	}
 }
@@ -101,13 +131,66 @@ static void chaninfo_hook(hook_channel_req_t *hdata)
 	char *namespace = NULL;
 	struct projectns *p = projectsvs->channame_get_project(hdata->mc->name, &namespace);
 
+	bool priv = has_priv(hdata->si, PRIV_PROJECT_AUSPEX);
+
 	if (p)
 	{
 		bool marked = p->marks.head != NULL;
-		if (marked && has_priv(hdata->si, PRIV_PROJECT_AUSPEX))
+		if (marked && priv)
 			command_success_nodata(hdata->si, _("The \2%s\2 namespace is registered to the \2%s\2 project (\2MARKED\2)"), namespace, p->name);
 		else
 			command_success_nodata(hdata->si, _("The \2%s\2 namespace is registered to the \2%s\2 project"), namespace, p->name);
+
+		char buf[BUFSIZE] = "";
+
+		mowgli_node_t *n;
+		MOWGLI_ITER_FOREACH(n, p->contacts.head)
+		{
+			struct project_contact *c = n->data;
+			if (!c->visible)
+				continue;
+
+			if (strlen(buf) > 80)
+			{
+				command_success_nodata(hdata->si, _("Public contacts: %s"), buf);
+				buf[0] = '\0';
+			}
+			if (buf[0])
+				mowgli_strlcat(buf, ", ", sizeof buf);
+			mowgli_strlcat(buf, entity(c->mu)->name, sizeof buf);
+
+			if (priv && c->secondary)
+				mowgli_strlcat(buf, _(" (secondary)"), sizeof buf);
+		}
+
+		if (buf[0])
+			command_success_nodata(hdata->si, _("Public contacts: %s"), buf);
+
+		if (priv)
+		{
+			buf[0] = '\0';
+			MOWGLI_ITER_FOREACH(n, p->contacts.head)
+			{
+				struct project_contact *c = n->data;
+				if (c->visible)
+					continue;
+
+				if (strlen(buf) > 80)
+				{
+					command_success_nodata(hdata->si, _("Unlisted contacts: %s"), buf);
+					buf[0] = '\0';
+				}
+				if (buf[0])
+					mowgli_strlcat(buf, ", ", sizeof buf);
+				mowgli_strlcat(buf, entity(c->mu)->name, sizeof buf);
+
+				if (priv && c->secondary)
+					mowgli_strlcat(buf, _(" (secondary)"), sizeof buf);
+			}
+
+			if (buf[0])
+				command_success_nodata(hdata->si, _("Unlisted contacts: %s"), buf);
+		}
 	}
 
 	free(namespace);
@@ -131,7 +214,8 @@ static void try_register_hook(hook_channel_register_check_t *hdata)
 		bool is_gc = false;
 		MOWGLI_ITER_FOREACH(n, project->contacts.head)
 		{
-			if (hdata->si->smu == n->data)
+			struct project_contact *contact = n->data;
+			if (hdata->si->smu == contact->mu)
 			{
 				is_gc = true;
 				break;

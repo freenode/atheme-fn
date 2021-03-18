@@ -27,7 +27,7 @@ void init_db(void);
 void deinit_db(void);
 
 // objects.c
-bool contact_new(struct projectns * const p, myuser_t * const mu);
+struct project_contact *contact_new(struct projectns * const p, myuser_t * const mu);
 bool contact_destroy(struct projectns * const p, myuser_t * const mt);
 struct projectns *project_new(const char * const name);
 struct projectns *project_find(const char * const name);

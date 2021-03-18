@@ -4,8 +4,16 @@ The CONTACT command allows to maintain the list of a project's
 registered group contacts. Group contacts can gain full access
 to any channel within their project's namespaces.
 
-Syntax: CONTACT <project> ADD|DEL <account>
+Group contacts are added as primary, non-public contacts by default.
+The PUBLIC flag will list group contacts in the ChanServ INFO command;
+the SECONDARY flag serves informational purposes and is only shown
+to network staff and the contact themselves.
+
+Syntax: CONTACT <project> ADD <account> [PUBLIC|PRIVATE] [PRIMARY|SECONDARY]
+Syntax: CONTACT <project> SET <account> [PUBLIC|PRIVATE] [PRIMARY|SECONDARY]
+Syntax: CONTACT <project> DEL <account>
 
 Examples:
-    /msg &nick& CONTACT CoolProject ADD NewMaintainer
+    /msg &nick& CONTACT CoolProject ADD NewMaintainer PUBLIC
+    /msg &nick& CONTACT CoolProject SET OldMaint PRIVATE SECONDARY
     /msg &nick& CONTACT CoolProject DEL RetiredGC

@@ -18,10 +18,11 @@
 // Arbitrary number that should avoid truncation even with various protocol overhead
 #define PROJECTNAMELEN CHANNELLEN
 
-#define PROJECTNS_ABIREV 9U
+#define PROJECTNS_ABIREV 10U
 
 #define PROJECTNS_MINVER_CLOAKNS 4U
 #define PROJECTNS_MINVER_CREATION_MD 9U
+#define PROJECTNS_MINVER_CONTACT_OBJECT 10U
 
 struct project_mark {
 	time_t time;
@@ -43,6 +44,14 @@ struct projectns {
 	stringref creator;
 };
 
+struct project_contact {
+	mowgli_node_t project_n, myuser_n;
+	myuser_t *mu;
+	struct projectns *project;
+	bool visible;
+	bool secondary;
+};
+
 struct projectsvs_conf {
 	char *namespace_separators;
 	bool default_open_registration;
@@ -59,7 +68,7 @@ struct projectsvs {
 	struct projectns *(*project_find)(const char *name);
 	void (*project_destroy)(struct projectns *p);
 
-	bool (*contact_new)(struct projectns * const p, myuser_t * const mu);
+	struct project_contact *(*contact_new)(struct projectns * const p, myuser_t * const mu);
 	bool (*contact_destroy)(struct projectns * const p, myuser_t * const mu);
 
 	void (*show_marks)(sourceinfo_t *si, struct projectns *p);

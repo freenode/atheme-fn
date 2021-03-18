@@ -40,7 +40,8 @@ static void cmd_claim(sourceinfo_t *si, int parc, char *parv[])
 		bool is_gc = false;
 		MOWGLI_ITER_FOREACH(n, p->contacts.head)
 		{
-			if (entity(si->smu) == n->data)
+			struct project_contact *contact = n->data;
+			if (si->smu == contact->mu)
 			{
 				is_gc = true;
 				break;

@@ -18,10 +18,10 @@ DECLARE_MODULE_V1
 static void cs_cmd_why(sourceinfo_t *si, int parc, char *parv[]);
 static void cs_cmd_fwhy(sourceinfo_t *si, int parc, char *parv[]);
 
-command_t cs_why = { "WHY", N_("Explains channel access logic."),
-		     AC_NONE, 2, cs_cmd_why, { .path = "cservice/why" } };
-command_t cs_fwhy = { "FWHY", N_("Explains channel access logic, including private information."),
-		     PRIV_USER_AUSPEX, 2, cs_cmd_fwhy, { .path = "cservice/why" } };
+static command_t cs_why = { "WHY", N_("Explains channel access logic."),
+		            AC_NONE, 2, cs_cmd_why, { .path = "cservice/why" } };
+static command_t cs_fwhy = { "FWHY", N_("Explains channel access logic, including private information."),
+		            PRIV_USER_AUSPEX, 2, cs_cmd_fwhy, { .path = "cservice/why" } };
 
 void _modinit(module_t *m)
 {

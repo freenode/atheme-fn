@@ -13,7 +13,7 @@
 #include "atheme.h"
 #include "projectns_common.h"
 
-struct projectsvs *projectsvs;
+static struct projectsvs *projectsvs;
 
 #define MAIN_MODULE "freenode/projectns/main"
 

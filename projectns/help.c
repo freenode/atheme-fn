@@ -14,7 +14,7 @@
 
 static void cmd_help(sourceinfo_t *si, int parc, char *parv[]);
 
-command_t ps_help = { "HELP", N_("Displays contextual help information."), AC_NONE, 1, cmd_help, { .path = "help" } };
+static command_t ps_help = { "HELP", N_("Displays contextual help information."), AC_NONE, 1, cmd_help, { .path = "help" } };
 
 static void cmd_help(sourceinfo_t *si, int parc, char *parv[])
 {

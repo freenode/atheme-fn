@@ -12,7 +12,7 @@
 
 static void cmd_channel(sourceinfo_t *si, int parc, char *parv[]);
 
-command_t ps_channel = { "CHANNEL", N_("Manages project channel namespaces."), PRIV_PROJECT_ADMIN, 4, cmd_channel, { .path = "freenode/project_channel" } };
+static command_t ps_channel = { "CHANNEL", N_("Manages project channel namespaces."), PRIV_PROJECT_ADMIN, 4, cmd_channel, { .path = "freenode/project_channel" } };
 
 static void cmd_channel(sourceinfo_t *si, int parc, char *parv[])
 {

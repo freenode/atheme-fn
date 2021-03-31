@@ -23,14 +23,14 @@ DECLARE_MODULE_V1
 	"freenode <https://freenode.net>"
 );
 
-command_t cs_akick = { "AKICK", N_("Manipulates a channel's AKICK list."),
-                        AC_NONE, 4, cs_cmd_akick, { .path = "cservice/akick" } };
-command_t cs_akick_add = { "ADD", N_("Adds a channel AKICK."),
-                        AC_NONE, 4, cs_cmd_akick_add, { .path = "" } };
-command_t cs_akick_del = { "DEL", N_("Deletes a channel AKICK."),
-                        AC_NONE, 3, cs_cmd_akick_del, { .path = "" } };
-command_t cs_akick_list = { "LIST", N_("Displays a channel's AKICK list."),
-                        AC_NONE, 2, cs_cmd_akick_list, { .path = "" } };
+static command_t cs_akick = { "AKICK", N_("Manipulates a channel's AKICK list."),
+                              AC_NONE, 4, cs_cmd_akick, { .path = "cservice/akick" } };
+static command_t cs_akick_add = { "ADD", N_("Adds a channel AKICK."),
+                              AC_NONE, 4, cs_cmd_akick_add, { .path = "" } };
+static command_t cs_akick_del = { "DEL", N_("Deletes a channel AKICK."),
+                              AC_NONE, 3, cs_cmd_akick_del, { .path = "" } };
+static command_t cs_akick_list = { "LIST", N_("Displays a channel's AKICK list."),
+                              AC_NONE, 2, cs_cmd_akick_list, { .path = "" } };
 
 typedef struct {
 	time_t expiration;
@@ -43,14 +43,14 @@ typedef struct {
 	mowgli_node_t node;
 } akick_timeout_t;
 
-time_t akickdel_next;
-mowgli_list_t akickdel_list;
-mowgli_patricia_t *cs_akick_cmds;
-mowgli_eventloop_timer_t *akick_timeout_check_timer = NULL;
+static time_t akickdel_next;
+static mowgli_list_t akickdel_list;
+static mowgli_patricia_t *cs_akick_cmds;
+static mowgli_eventloop_timer_t *akick_timeout_check_timer = NULL;
 
 static akick_timeout_t *akick_add_timeout(mychan_t *mc, myentity_t *mt, const char *host, time_t expireson);
 
-mowgli_heap_t *akick_timeout_heap;
+static mowgli_heap_t *akick_timeout_heap;
 
 void _modinit(module_t *m)
 {

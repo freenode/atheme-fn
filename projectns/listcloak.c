@@ -13,7 +13,7 @@
 
 static void cmd_listcloak(sourceinfo_t *si, int parc, char *parv[]);
 
-command_t ps_listcloak = { "LISTCLOAK", N_("Lists cloak namespaces."), PRIV_PROJECT_AUSPEX, 1, cmd_listcloak, { .path = "freenode/project_listcloak" } };
+static command_t ps_listcloak = { "LISTCLOAK", N_("Lists cloak namespaces."), PRIV_PROJECT_AUSPEX, 1, cmd_listcloak, { .path = "freenode/project_listcloak" } };
 
 struct each_cloak_state
 {

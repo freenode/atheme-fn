@@ -12,7 +12,7 @@
 
 static void cmd_mark(sourceinfo_t *si, int parc, char *parv[]);
 
-command_t ps_mark = { "MARK", N_("Sets internal notes on projects."), PRIV_PROJECT_ADMIN, 3, cmd_mark, { .path = "freenode/project_mark" } };
+static command_t ps_mark = { "MARK", N_("Sets internal notes on projects."), PRIV_PROJECT_ADMIN, 3, cmd_mark, { .path = "freenode/project_mark" } };
 
 static unsigned int get_last_mark_id(struct projectns *p)
 {

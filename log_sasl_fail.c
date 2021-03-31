@@ -4,7 +4,7 @@
 #include "pmodule.h"
 #endif
 
-void (*old_encap_handler)(sourceinfo_t *, int, char *[]) = 0;
+static void (*old_encap_handler)(sourceinfo_t *, int, char *[]) = 0;
 
 static void encap_handler(sourceinfo_t *si, int parc, char *parv[])
 {

@@ -13,7 +13,7 @@
 
 static void cmd_listchannel(sourceinfo_t *si, int parc, char *parv[]);
 
-command_t ps_listchannel = { "LISTCHANNEL", N_("Lists channel namespaces."), PRIV_PROJECT_AUSPEX, 1, cmd_listchannel, { .path = "freenode/project_listchannel" } };
+static command_t ps_listchannel = { "LISTCHANNEL", N_("Lists channel namespaces."), PRIV_PROJECT_AUSPEX, 1, cmd_listchannel, { .path = "freenode/project_listchannel" } };
 
 struct each_channel_state
 {

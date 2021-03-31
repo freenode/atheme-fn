@@ -12,7 +12,7 @@
 
 static void cmd_audit(sourceinfo_t *si, int parc, char *parv[]);
 
-command_t ps_audit = {
+static command_t ps_audit = {
 	.name       = "AUDIT",
 	.desc       = N_("Lists projects with incomplete registrations"),
 	.access     = PRIV_PROJECT_AUSPEX,

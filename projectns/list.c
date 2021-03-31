@@ -12,7 +12,7 @@
 
 static void cmd_list(sourceinfo_t *si, int parc, char *parv[]);
 
-command_t ps_list = { "LIST", N_("Lists project registrations."), PRIV_PROJECT_AUSPEX, 1, cmd_list, { .path = "freenode/project_list" } };
+static command_t ps_list = { "LIST", N_("Lists project registrations."), PRIV_PROJECT_AUSPEX, 1, cmd_list, { .path = "freenode/project_list" } };
 
 static void cmd_list(sourceinfo_t *si, int parc, char *parv[])
 {

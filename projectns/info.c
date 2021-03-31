@@ -12,7 +12,7 @@
 
 static void cmd_info(sourceinfo_t *si, int parc, char *parv[]);
 
-command_t ps_info = { "INFO", N_("Displays information about a project registration."), PRIV_PROJECT_AUSPEX, 1, cmd_info, { .path = "freenode/project_info" } };
+static command_t ps_info = { "INFO", N_("Displays information about a project registration."), PRIV_PROJECT_AUSPEX, 1, cmd_info, { .path = "freenode/project_info" } };
 
 struct info_item
 {

@@ -12,7 +12,7 @@
 
 static void cmd_cloak(sourceinfo_t *si, int parc, char *parv[]);
 
-command_t ps_cloak = { "CLOAK", N_("Manages project cloak namespaces."), PRIV_PROJECT_ADMIN, 4, cmd_cloak, { .path = "freenode/project_cloak" } };
+static command_t ps_cloak = { "CLOAK", N_("Manages project cloak namespaces."), PRIV_PROJECT_ADMIN, 4, cmd_cloak, { .path = "freenode/project_cloak" } };
 
 static void cmd_cloak(sourceinfo_t *si, int parc, char *parv[])
 {

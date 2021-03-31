@@ -13,8 +13,8 @@
 static void cmd_register(sourceinfo_t *si, int parc, char *parv[]);
 static void cmd_drop(sourceinfo_t *si, int parc, char *parv[]);
 
-command_t ps_register = { "REGISTER", N_("Adds a project registration."), PRIV_PROJECT_ADMIN, 2, cmd_register, { .path = "freenode/project_register" } };
-command_t ps_drop = { "DROP", N_("Deletes a project registration."), PRIV_PROJECT_ADMIN, 1, cmd_drop, { .path = "freenode/project_drop" } };
+static command_t ps_register = { "REGISTER", N_("Adds a project registration."), PRIV_PROJECT_ADMIN, 2, cmd_register, { .path = "freenode/project_register" } };
+static command_t ps_drop = { "DROP", N_("Deletes a project registration."), PRIV_PROJECT_ADMIN, 1, cmd_drop, { .path = "freenode/project_drop" } };
 
 static void cmd_register(sourceinfo_t *si, int parc, char *parv[])
 {

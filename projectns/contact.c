@@ -12,7 +12,7 @@
 
 static void cmd_contact(sourceinfo_t *si, int parc, char *parv[]);
 
-command_t ps_contact = { "CONTACT", N_("Manages project contacts."), PRIV_PROJECT_ADMIN, 5, cmd_contact, { .path = "freenode/project_contact" } };
+static command_t ps_contact = { "CONTACT", N_("Manages project contacts."), PRIV_PROJECT_ADMIN, 5, cmd_contact, { .path = "freenode/project_contact" } };
 
 static void cmd_contact(sourceinfo_t *si, int parc, char *parv[])
 {

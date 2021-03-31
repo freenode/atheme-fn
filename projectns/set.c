@@ -16,12 +16,12 @@ static void set_openreg(sourceinfo_t *si, int parc, char *parv[]);
 static void set_reginfo(sourceinfo_t *si, int parc, char *parv[]);
 static void set_name(sourceinfo_t *si, int parc, char *parv[]);
 
-command_t ps_set = { "SET", N_("Manipulates basic project settings."), PRIV_PROJECT_ADMIN, 3, cmd_set, { .func = help_set } };
-command_t ps_set_name = { "NAME", N_("Changes the name used to identify the project."), PRIV_PROJECT_ADMIN, 2, set_name, { .path = "freenode/project_set_name" } };
-command_t ps_set_openreg = { "OPENREG", N_("Allow non-contacts to register channels."), PRIV_PROJECT_ADMIN, 2, set_openreg, { .path = "freenode/project_set_openreg" } };
-command_t ps_set_reginfo = { "REGINFO", N_("Public information about the project namespace."), PRIV_PROJECT_ADMIN, 2, set_reginfo, { .path = "freenode/project_set_reginfo" } };
+static command_t ps_set = { "SET", N_("Manipulates basic project settings."), PRIV_PROJECT_ADMIN, 3, cmd_set, { .func = help_set } };
+static command_t ps_set_name = { "NAME", N_("Changes the name used to identify the project."), PRIV_PROJECT_ADMIN, 2, set_name, { .path = "freenode/project_set_name" } };
+static command_t ps_set_openreg = { "OPENREG", N_("Allow non-contacts to register channels."), PRIV_PROJECT_ADMIN, 2, set_openreg, { .path = "freenode/project_set_openreg" } };
+static command_t ps_set_reginfo = { "REGINFO", N_("Public information about the project namespace."), PRIV_PROJECT_ADMIN, 2, set_reginfo, { .path = "freenode/project_set_reginfo" } };
 
-mowgli_patricia_t *set_cmdtree;
+static mowgli_patricia_t *set_cmdtree;
 
 static void help_set(sourceinfo_t *si, const char *subcmd)
 {
